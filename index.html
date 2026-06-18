@@ -103,7 +103,7 @@
       <div class="card" style="border-left:3px solid var(--red);margin-bottom:10px;"><div style="font-size:12.5px;" id="disc-loss">—</div></div>
       <div class="toolbar"><span class="cnt" id="disc-cnt"></span><button class="dl" onclick="dl('disc')">⬇ CSV</button></div>
       <div class="tablewrap"><table id="disc-t"></table></div>
-      <p class="note">채널: <span class="chip c-rok">쿠팡</span> <span class="chip c-dir">직진</span> <span class="chip c-self">자사몰</span> · <b>제안가 공헌이익</b>=판매가÷1.1−원가−수수료(35%)−포장비(200)−배송비(5만↑1,681/미만1,000), 이지어드민 라이브 원가 기준. <span style="color:var(--red)">빨강=적자</span>·<span style="color:#a36a00">주황=하한(+1,000)미달</span>. <span class="chip c-rok">할인강행</span>=적자 감수 소진 확정.</p>
+      <p class="note">채널: <span class="chip c-rok">쿠팡</span> <span class="chip c-dir">직진</span> <span class="chip c-self">자사몰</span> · <b>제안가 공헌이익</b>=판매가÷1.1−원가−수수료(35%)−포장비(200)−배송비(5만↑1,681/미만1,000), 이지어드민 라이브 원가 기준. <span style="color:var(--red)">빨강=적자</span>·<span style="color:#a36a00">주황=하한(+1,000)미달</span>. <span class="chip c-rok">할인강행</span>=적자 감수 소진 확정. · <b>판매가=마진계산기 기준</b>(주문평균가 아님). 할인율 <span style="color:var(--red)">빨강⚠</span>=현재가가 제안가보다 낮음 → 제안할인 재검토 필요.</p>
     </section>
 
     <section class="tab" id="gift">
@@ -190,13 +190,15 @@ function tbl(el,cols,rows){
 // 공헌이익 계산식 (마진계산기 역산·100% 검증, 수수료율 35%)
 const GANGHAENG=['96466','95712','24710','105024']; // 적자 감수 할인강행 확정 (2026-06-18)
 const DROPPED=['96466','92901','99253','95712'];      // 이미 1차 인하 완료
+// 판매가 = 마진계산기 기준 (주문평균가 대체, 2026-06-18). 윤정 검토표 선택값.
+const PRICE_MC={'96466':12900,'98679':18000,'47064':31000,'45612':27000,'94228':19000,'92901':19000,'99253':8900,'95712':10900,'86117':15000,'94238':12000,'105328':32000,'56005':28000,'48143':29000,'24710':10900,'92014':14900,'21126':25000,'105024':112000,'93325':8000,'94218':12000,'99893':30000};
 function cmCalc(price,cost){price=+price;cost=+cost;if(!price)return null;const ship=price>=50000?1681:1000;return Math.round(price/1.1-cost-price*0.35-200-ship);}
 function renderDisc(){
-  STORE.disc.forEach(r=>{r.cm=cmCalc(r.dprice,r.cost);r.cmcur=cmCalc(r.price,r.cost);});
+  STORE.disc.forEach(r=>{if(PRICE_MC[r.code]!=null)r.price=PRICE_MC[r.code];r.conflict=(+r.dprice)>=(+r.price);r.rate=(+r.price>0)?Math.round((r.price-r.dprice)/r.price*100)+'%':r.rate;r.cm=cmCalc(r.dprice,r.cost);r.cmcur=cmCalc(r.price,r.cost);});
   const cmCell=r=>{const v=r.cm||0;const col=v<0?'#c0392b':(v<1000?'#a36a00':'#1d2433');return `<td class="r" style="font-weight:600;color:${col}">${v.toLocaleString()}</td>`;};
   const stCell=r=>{if(GANGHAENG.includes(String(r.code)))return '<td><span class="chip c-rok">할인강행</span></td>';if((r.cm||0)<1000)return '<td><span class="chip c-dir">하한미달</span></td>';return '<td><span class="chip" style="background:#e3f6e9;color:#1f7a3d">OK</span></td>';};
   const dropCell=r=>DROPPED.includes(String(r.code))?'<td><span class="chip" style="background:#fff7cc;color:#8a6d00">1차인하</span></td>':'<td></td>';
-  tbl($('#disc-t'),[{t:'순위',k:'rank',r:1},{t:'상품명',k:'name',name:1},{t:'이력',html:dropCell},{t:'현재고',k:'stock',r:1},{t:'원가',k:'cost',r:1},{t:'판매가',k:'price',r:1},{t:'제안가',k:'dprice',r:1},{t:'할인율',k:'rate'},{t:'제안가 공헌이익',html:cmCell},{t:'상태',html:stCell},{t:'60일',k:'s60',r:1},{t:'4주목표',k:'target',r:1},{t:'채널',k:'channel',chip:1},{t:'비고',k:'note'}],STORE.disc);
+  tbl($('#disc-t'),[{t:'순위',k:'rank',r:1},{t:'상품명',k:'name',name:1},{t:'이력',html:dropCell},{t:'현재고',k:'stock',r:1},{t:'원가',k:'cost',r:1},{t:'판매가',k:'price',r:1},{t:'제안가',k:'dprice',r:1},{t:'할인율',html:r=>`<td style="${r.conflict?'color:#c0392b;font-weight:700':''}">${r.rate||''}${r.conflict?' ⚠':''}</td>`},{t:'제안가 공헌이익',html:cmCell},{t:'상태',html:stCell},{t:'60일',k:'s60',r:1},{t:'4주목표',k:'target',r:1},{t:'채널',k:'channel',chip:1},{t:'비고',k:'note'}],STORE.disc);
   $('#disc-cnt').textContent=STORE.disc.length+'건';
   let l4=0,lall=0,neg=0;
   STORE.disc.forEach(r=>{if((r.cm||0)<0){neg++;l4+=r.cm*(+r.target||0);lall+=r.cm*(+r.stock||0);}});
