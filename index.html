@@ -109,7 +109,7 @@
       <h2>사은품 후보 — 적합·보통 품목 (고단가 5종은 할인 전환·제외)</h2>
       <div class="toolbar"><span class="cnt" id="gift-cnt"></span><button class="dl" onclick="dl('gift')">⬇ CSV</button></div>
       <div class="tablewrap"><table id="gift-t"></table></div>
-      <p class="note">고단가 5종(자산 676만)은 할인 전환으로 사은품에서 제외. (원래 후보 1,525만 = 사은품 849만 + 고단가 676만)</p>
+      <p class="note">고단가 5종(676만)은 할인 전환 제외. 신규 발굴 2종(연장후크3단·투컵업패드, 268만) 추가 → 적합 사은품 합계 약 1,117만 (계획 1,800만엔 미달).</p>
     </section>
 
     <section class="tab" id="scrap">
@@ -238,7 +238,8 @@ function renderDisc(){
   if(el)el.innerHTML=`제안가 기준 적자 <b>${neg}종</b> · 손실노출 4주목표 약 <b style="color:#c0392b">${Math.round(l4/10000).toLocaleString()}만</b> · 전량 약 <b style="color:#c0392b">${Math.round(lall/10000).toLocaleString()}만</b> · 할인강행 4종(백리스·네모팬티·캔디팝·Sorbet)`;
 }
 function renderGift(){
-  const rows=STORE.gift.filter(r=>!String(r.fit||'').includes('고단가')).sort((a,b)=>{const o=f=>String(f||'').startsWith('적합')?0:(String(f||'').startsWith('보통')?1:2);return o(a.fit)-o(b.fit)||(+b.asset||0)-(+a.asset||0);});
+  const GIFT_ADD=[{code:'01124',name:'연장후크 3단',qty:8507,unit:81,asset:69,fit:'적합(신규·초저가)'},{code:'05117',name:'투컵업 추가패드',qty:2422,unit:823,asset:199,fit:'적합(신규·저가)'}];
+  const rows=STORE.gift.filter(r=>!String(r.fit||'').includes('고단가')).concat(GIFT_ADD).sort((a,b)=>{const o=f=>String(f||'').startsWith('적합')?0:(String(f||'').startsWith('보통')?1:2);return o(a.fit)-o(b.fit)||(+b.asset||0)-(+a.asset||0);});
   const fitCell=r=>{const f=String(r.fit||'');const c=f.startsWith('적합')?'background:#e3f6e9;color:#1f7a3d':(f.startsWith('보통')?'background:#fff3d6;color:#a36a00':'background:#ffe8e6;color:#c0392b');return `<td><span class="chip" style="${c}">${f}</span></td>`;};
   tbl($('#gift-t'),[{t:'상품코드',k:'code'},{t:'상품명',k:'name',name:1},{t:'수량',k:'qty',r:1},{t:'자산(만원)',k:'asset',r:1},{t:'적합도',html:fitCell}],rows);
   const tot=rows.reduce((s,r)=>s+(+r.asset||0),0),totq=rows.reduce((s,r)=>s+(+r.qty||0),0);
