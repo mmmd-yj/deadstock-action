@@ -63,12 +63,10 @@
 <div id="login">
   <div class="lcard">
     <h1>악성재고 소진 대시보드</h1>
-    <p>도로시와 · 사내 로그인 필요</p>
-    <label>이메일</label>
-    <input id="email" type="email" autocomplete="username" placeholder="name@mmmd.kr">
+    <p>도로시와 · 사내 공유 비밀번호</p>
     <label>비밀번호</label>
-    <input id="pw" type="password" autocomplete="current-password" placeholder="••••••••">
-    <button id="loginBtn">로그인</button>
+    <input id="pw" type="password" autocomplete="current-password" placeholder="공유 비밀번호 입력">
+    <button id="loginBtn">입장</button>
     <div class="lerr" id="lerr"></div>
   </div>
 </div>
@@ -149,10 +147,11 @@ async function boot(){
   const {data:{session}}=await sb.auth.getSession();
   if(session) showApp(); else $('#login').style.display='flex';
 }
+const SHARED_EMAIL='team@mmmd.kr';
 $('#loginBtn').onclick=async()=>{
   $('#lerr').textContent='';
-  const {error}=await sb.auth.signInWithPassword({email:$('#email').value.trim(),password:$('#pw').value});
-  if(error){$('#lerr').textContent='로그인 실패: '+error.message;return;}
+  const {error}=await sb.auth.signInWithPassword({email:SHARED_EMAIL,password:$('#pw').value});
+  if(error){$('#lerr').textContent='비밀번호가 맞지 않습니다';return;}
   showApp();
 };
 $('#pw').addEventListener('keydown',e=>{if(e.key==='Enter')$('#loginBtn').click();});
