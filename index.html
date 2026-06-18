@@ -109,7 +109,7 @@
       <h2>사은품 후보 — 적합·보통 품목 (고단가 5종은 할인 전환·제외)</h2>
       <div class="toolbar"><span class="cnt" id="gift-cnt"></span><button class="dl" onclick="dl('gift')">⬇ CSV</button></div>
       <div class="tablewrap"><table id="gift-t"></table></div>
-      <p class="note">고단가 5종은 할인 전환 제외, 밀착 노와이어 제외. 방치재고 추가 발굴 반영(연장후크3단·투컵업패드·베일에가려진팬티·캔디팝팬티·프리컷브라렛(브이넥)·CH팬티·사은품쫀쫀심리스팬티·릴렉싱브라렛세트) → 적합 사은품 합계 약 1,297만 (계획 1,800만엔 미달).</p>
+      <p class="note">고단가 5종은 할인 전환 제외, 밀착 노와이어 제외. 방치재고 추가 발굴 반영(연장후크3단·투컵업패드·베일에가려진팬티·캔디팝팬티·프리컷브라렛(브이넥)·CH팬티·사은품쫀쫀심리스팬티·릴렉싱브라렛세트·데미안스타킹·개미허리비키니팬티) → 적합 사은품 합계 약 1,460만 (계획 1,800만엔 미달).</p>
     </section>
 
     <section class="tab" id="scrap">
@@ -238,7 +238,7 @@ function renderDisc(){
   if(el)el.innerHTML=`제안가 기준 적자 <b>${neg}종</b> · 손실노출 4주목표 약 <b style="color:#c0392b">${Math.round(l4/10000).toLocaleString()}만</b> · 전량 약 <b style="color:#c0392b">${Math.round(lall/10000).toLocaleString()}만</b> · 할인강행 4종(백리스·네모팬티·캔디팝·Sorbet)`;
 }
 function renderGift(){
-  const GIFT_ADD=[{code:'01124',name:'연장후크 3단',qty:8507,unit:81,asset:69,fit:'적합(초저가)'},{code:'05117',name:'투컵업 추가패드',qty:2422,unit:823,asset:199,fit:'적합(저가)'},{code:'S베일',name:'베일에가려진 팬티',qty:462,unit:1934,asset:89,fit:'적합(저가 대량)'},{code:'S캔디',name:'캔디팝 팬티',qty:246,unit:1556,asset:38,fit:'적합(초저가 대량)'},{code:'S프리R',name:'프리컷 심리스 브라렛 세트(라운드넥)',qty:137,unit:4964,asset:68,fit:'보통'},{code:'S릴렉싱',name:'릴렉싱 브라렛 세트',qty:138,unit:5847,asset:81,fit:'보통(세트·단가↑)'},{code:'S프리',name:'프리컷 심리스 브라렛 세트(브이넥)',qty:118,unit:5216,asset:62,fit:'보통(세트·단가↑)'},{code:'SCH',name:'CH 팬티',qty:10,unit:1934,asset:2,fit:'적합(초저가)'},{code:'S쫀쫀',name:'사은품 쫀쫀 심리스 팬티',qty:9,unit:0,asset:0,fit:'적합(사은품 전용)'}];
+  const GIFT_ADD=[{code:'01124',name:'연장후크 3단',qty:8507,unit:81,asset:69,fit:'적합(초저가)'},{code:'05117',name:'투컵업 추가패드',qty:2422,unit:823,asset:199,fit:'적합(저가)'},{code:'S베일',name:'베일에가려진 팬티',qty:462,unit:1934,asset:89,fit:'적합(저가 대량)'},{code:'S캔디',name:'캔디팝 팬티',qty:246,unit:1556,asset:38,fit:'적합(초저가 대량)'},{code:'S프리R',name:'프리컷 심리스 브라렛 세트(라운드넥)',qty:137,unit:4964,asset:68,fit:'보통'},{code:'S릴렉싱',name:'릴렉싱 브라렛 세트',qty:138,unit:5847,asset:81,fit:'보통(세트·단가↑)'},{code:'S프리',name:'프리컷 심리스 브라렛 세트(브이넥)',qty:118,unit:5216,asset:62,fit:'보통(세트·단가↑)'},{code:'SCH',name:'CH 팬티',qty:10,unit:1934,asset:2,fit:'적합(초저가)'},{code:'S데미안',name:'데미안 소망 스타킹',qty:370,unit:1429,asset:53,fit:'적합(저가)'},{code:'S개미',name:'개미허리 비키니팬티 (1P)',qty:221,unit:4964,asset:110,fit:'보통(단가↑)'},{code:'S쫀쫀',name:'사은품 쫀쫀 심리스 팬티',qty:9,unit:0,asset:0,fit:'적합(사은품 전용)'}];
   const ADDN=GIFT_ADD.map(x=>x.name);
   const rows=STORE.gift.filter(r=>!String(r.fit||'').includes('고단가')&&!String(r.name||'').includes('밀착 노와이어')&&!ADDN.includes(String(r.name||''))).concat(GIFT_ADD).sort((a,b)=>{const o=f=>String(f||'').startsWith('적합')?0:(String(f||'').startsWith('보통')?1:2);return o(a.fit)-o(b.fit)||(+b.asset||0)-(+a.asset||0);});
   const fitCell=r=>{const f=String(r.fit||'');const c=f.startsWith('적합')?'background:#e3f6e9;color:#1f7a3d':(f.startsWith('보통')?'background:#fff3d6;color:#a36a00':'background:#ffe8e6;color:#c0392b');return `<td><span class="chip" style="${c}">${f}</span></td>`;};
