@@ -200,7 +200,7 @@ function renderDisc(){
   const cmCell=r=>{const v=r.cmcur||0;const col=v<0?'#c0392b':(v<1000?'#a36a00':'#1d2433');return `<td class="r" style="font-weight:600;color:${col}">${v.toLocaleString()}</td>`;};
   const stCell=r=>{if(r.gang&&r.drop)return '<td><span class="chip c-rok">할인강행</span></td>';if(r.gang&&(r.cmcur||0)<1000)return '<td><span class="chip" style="background:#fde4cf;color:#b5460f">공헌이익 저조</span></td>';if((r.cmcur||0)<0)return '<td><span class="chip c-dir">적자</span></td>';if((r.cmcur||0)<1000)return '<td><span class="chip" style="background:#fff3d6;color:#a36a00">하한미달</span></td>';return '<td><span class="chip" style="background:#e3f6e9;color:#1f7a3d">OK</span></td>';};
   const dropCell=r=>r.drop?'<td><span class="chip" style="background:#fff7cc;color:#8a6d00">1차인하</span></td>':'<td></td>';
-  tbl($('#disc-t'),[{t:'순위',k:'rank',r:1},{t:'상품명',k:'name',name:1},{t:'이력',html:dropCell},{t:'현재고',k:'stock',r:1},{t:'원가',k:'cost',r:1},{t:'판매가',k:'price',r:1},{t:'공헌이익(현재판매가)',html:cmCell},{t:'상태',html:stCell},{t:'60일',k:'s60',r:1},{t:'4주목표',k:'target',r:1},{t:'채널',k:'channel',chip:1},{t:'비고',k:'note'}],STORE.disc);
+  tbl($('#disc-t'),[{t:'순위',k:'rank',r:1},{t:'상품명',k:'name',name:1},{t:'이력',html:dropCell},{t:'현재고',k:'stock',r:1},{t:'원가',k:'cost',r:1},{t:'판매가',k:'price',r:1},{t:'공헌이익(현재 판매가 기준)',html:cmCell},{t:'상태',html:stCell},{t:'60일 판매',k:'s60',r:1},{t:'4주 목표소진',k:'target',r:1},{t:'채널',k:'channel',chip:1}],STORE.disc);
   $('#disc-cnt').textContent=STORE.disc.length+'건';
   let l4=0,lall=0,neg=0;
   STORE.disc.forEach(r=>{if((r.cmcur||0)<0){neg++;l4+=r.cmcur*(+r.target||0);lall+=r.cmcur*(+r.stock||0);}});
