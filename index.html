@@ -103,7 +103,7 @@
       <div class="card" style="border-left:3px solid var(--red);margin-bottom:10px;"><div style="font-size:12.5px;" id="disc-loss">—</div></div>
       <div class="toolbar"><span class="cnt" id="disc-cnt"></span><button class="dl" onclick="dl('disc')">⬇ CSV</button></div>
       <div class="tablewrap"><table id="disc-t"></table></div>
-      <p class="note">채널: <span class="chip c-rok">쿠팡</span> <span class="chip c-dir">직진</span> <span class="chip c-self">자사몰</span> · <b>공헌이익=현재 판매가 기준</b> (판매가÷1.1−원가−수수료35%−포장비200−배송비[5만↑1,681/미만1,000]), 이지어드민 라이브 원가·마진계산기 판매가. <span style="color:var(--red)">빨강=적자</span>·<span style="color:#a36a00">주황=하한(+1,000)미달</span>. <span class="chip c-rok">할인강행</span>=적자 감수 소진 확정. 정렬: 1차인하·할인강행 우선. 제안가·할인율은 제외(주문평균가 기반이라 부정확).</p>
+      <p class="note">채널: <span class="chip c-rok">쿠팡</span> <span class="chip c-dir">직진</span> <span class="chip c-self">자사몰</span> · <b>공헌이익=현재 판매가 기준</b> (판매가÷1.1−원가−수수료35%−포장비200−배송비[5만↑1,681/미만1,000]), 이지어드민 라이브 원가·마진계산기 판매가. <span style="color:var(--red)">빨강=적자</span>·<span style="color:#a36a00">주황=하한(+1,000)미달</span>. <span class="chip c-rok">할인강행</span>=적자 감수 소진 확정.</p>
     </section>
 
     <section class="tab" id="gift">
@@ -119,11 +119,9 @@
     </section>
 
     <section class="tab" id="chan">
-      <h2>채널 인사이트</h2>
-      <div class="card"><div class="insight">
-        <div class="ins"><b>쿠팡이 숨은 핵심</b><br>누디볼륨업 <span class="chip c-rok">쿠팡 74%</span> · 몰랑드 35% · 캔디팝/어깨끈 29% · 누드브라 24%.</div>
-        <div class="ins"><b>직진(지그재그)</b><br>마르살라 12%·심플볼륨 11%만 의미. 식는 중.</div>
-      </div></div>
+      <h2>채널별 제품 배정 — 30일 판매 1위 채널 기준</h2>
+      <p class="note" style="margin-bottom:12px">각 제품을 최근 30일 판매 비중이 가장 높은 채널에 배정. 그 채널을 우선 공략·할인 노출하면 소진 효율이 높음.</p>
+      <div id="chan-alloc"></div>
       <h2>가격 정책 — 공헌이익 3단계 사다리</h2>
       <div class="card"><div class="insight">
         <div class="ins"><b>① 기본</b> 공헌이익 +1,000원 하한</div>
@@ -169,7 +167,22 @@ async function showApp(){
   ]);
   const sm={}; (su.data||[]).forEach(r=>sm[r.k]=r.v);
   STORE={disc:di.data||[],gift:gi.data||[],scrap:sc.data||[]};
-  renderKpi(sm); renderDisc(); renderGift(); renderScrap();
+  renderKpi(sm); renderDisc(); renderGift(); renderScrap(); renderChan();
+}
+function renderChan(){
+  const el=$('#chan-alloc'); if(!el)return;
+  const parse=s=>String(s||'').split('·').map(t=>{const m=String(t).trim().match(/^(.+?)(\d+)$/);return m?{ch:m[1].trim(),pct:+m[2]}:null;}).filter(Boolean);
+  const groups={};
+  STORE.disc.forEach(r=>{const ch=parse(r.channel);if(!ch.length)return;ch.sort((a,b)=>b.pct-a.pct);const top=ch[0];(groups[top.ch]=groups[top.ch]||[]).push({name:r.name,pct:top.pct,rank:r.rank});});
+  const order=Object.keys(groups).sort((a,b)=>groups[b].length-groups[a].length||a.localeCompare(b));
+  const cls=c=>c.includes('쿠팡')?'c-rok':(c.includes('자사')?'c-self':(c.includes('직진')?'c-dir':'c-etc'));
+  el.innerHTML=order.map(ch=>{
+    const items=groups[ch].sort((a,b)=>(+a.rank)-(+b.rank));
+    return `<div class="card" style="margin-bottom:10px"><div style="font-weight:700;color:var(--navy);margin-bottom:8px"><span class="chip ${cls(ch)}">${ch}</span> <span style="font-size:12px;color:var(--sub);font-weight:400">${items.length}종</span></div>`+
+      `<table><thead><tr><th style="width:50px">순위</th><th>상품명</th><th class="r" style="width:90px">${ch} 비중</th></tr></thead><tbody>`+
+      items.map(it=>`<tr><td>${it.rank}</td><td class="name">${it.name}</td><td class="r" style="font-weight:600">${it.pct}%</td></tr>`).join('')+
+      `</tbody></table></div>`;
+  }).join('');
 }
 
 function renderKpi(s){
@@ -195,8 +208,7 @@ const PRICE_MC={'96466':12900,'98679':28000,'47064':31000,'45612':27000,'94228':
 function cmCalc(price,cost){price=+price;cost=+cost;if(!price)return null;const ship=price>=50000?1681:1000;return Math.round(price/1.1-cost-price*0.35-200-ship);}
 function renderDisc(){
   STORE.disc.forEach(r=>{if(PRICE_MC[r.code]!=null)r.price=PRICE_MC[r.code];r.gang=GANGHAENG.includes(String(r.code));r.drop=DROPPED.includes(String(r.code));r.cmcur=cmCalc(r.price,r.cost);});
-  // 정렬: 1차인하+할인강행 → 1차인하 → 나머지, 같은 그룹은 순위순
-  STORE.disc.sort((a,b)=>{const sv=x=>(x.drop&&x.gang)?0:(x.drop?1:2);return sv(a)-sv(b)||(+a.rank)-(+b.rank);});
+  STORE.disc.sort((a,b)=>(+a.rank)-(+b.rank)); // 순위순
   const cmCell=r=>{const v=r.cmcur||0;const col=v<0?'#c0392b':(v<1000?'#a36a00':'#1d2433');return `<td class="r" style="font-weight:600;color:${col}">${v.toLocaleString()}</td>`;};
   const stCell=r=>{if(r.gang&&r.drop)return '<td><span class="chip c-rok">할인강행</span></td>';if(r.gang&&(r.cmcur||0)<1000)return '<td><span class="chip" style="background:#fde4cf;color:#b5460f">공헌이익 저조</span></td>';if((r.cmcur||0)<0)return '<td><span class="chip c-dir">적자</span></td>';if((r.cmcur||0)<1000)return '<td><span class="chip" style="background:#fff3d6;color:#a36a00">하한미달</span></td>';return '<td><span class="chip" style="background:#e3f6e9;color:#1f7a3d">OK</span></td>';};
   const dropCell=r=>r.drop?'<td><span class="chip" style="background:#fff7cc;color:#8a6d00">1차인하</span></td>':'<td></td>';
