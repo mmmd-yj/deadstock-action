@@ -8,400 +8,211 @@
   :root{color-scheme:light;--bg:#f5f6f8;--card:#fff;--ink:#1d2433;--sub:#6b7280;--line:#e7e9ee;--red:#e5484d;--amber:#f5a623;--green:#2fa84f;--blue:#3a7afe;--navy:#1f2a44;}
   *{box-sizing:border-box;margin:0;padding:0;}
   body{font-family:'Pretendard','Apple SD Gothic Neo','Malgun Gothic',sans-serif;background:var(--bg);color:var(--ink);line-height:1.45;}
+  /* login */
+  #login{min-height:100vh;display:flex;align-items:center;justify-content:center;padding:20px;}
+  .lcard{background:var(--card);border:1px solid var(--line);border-radius:14px;padding:32px 30px;width:100%;max-width:360px;}
+  .lcard h1{font-size:18px;color:var(--navy);margin-bottom:4px;}
+  .lcard p{font-size:13px;color:var(--sub);margin-bottom:20px;}
+  .lcard label{font-size:12.5px;color:var(--sub);display:block;margin:12px 0 5px;}
+  .lcard input{width:100%;padding:10px 12px;border:1px solid var(--line);border-radius:8px;font-size:14px;}
+  .lcard button{width:100%;margin-top:20px;padding:11px;background:var(--navy);color:#fff;border:none;border-radius:8px;font-size:14px;font-weight:600;cursor:pointer;}
+  .lerr{color:var(--red);font-size:12.5px;margin-top:12px;min-height:16px;}
+  /* app */
+  #app{display:none;}
   .wrap{max-width:1180px;margin:0 auto;padding:24px 20px 60px;}
   header{display:flex;justify-content:space-between;align-items:flex-end;border-bottom:2px solid var(--navy);padding-bottom:12px;flex-wrap:wrap;gap:8px;}
   header h1{font-size:21px;color:var(--navy);}
   header .meta{font-size:12.5px;color:var(--sub);text-align:right;}
+  header .meta a{color:var(--blue);cursor:pointer;}
   nav.tabs{display:flex;gap:6px;margin:16px 0 20px;flex-wrap:wrap;}
   nav.tabs button{border:1px solid var(--line);background:var(--card);color:var(--sub);padding:8px 16px;border-radius:20px;font-size:13.5px;cursor:pointer;font-weight:600;}
   nav.tabs button.on{background:var(--navy);color:#fff;border-color:var(--navy);}
-  section.tab{display:none;}
-  section.tab.on{display:block;}
+  section.tab{display:none;}section.tab.on{display:block;}
   h2{font-size:15px;margin:22px 0 12px;color:var(--navy);display:flex;align-items:center;gap:8px;}
   h2::before{content:"";width:4px;height:15px;background:var(--blue);border-radius:2px;}
-  .kpis{display:grid;grid-template-columns:repeat(4,1fr);gap:13px;}
+  .kpis{display:grid;grid-template-columns:repeat(auto-fit,minmax(150px,1fr));gap:13px;}
   .kpi{background:var(--card);border:1px solid var(--line);border-radius:12px;padding:15px 17px;}
   .kpi .l{font-size:12px;color:var(--sub);margin-bottom:5px;}
   .kpi .v{font-size:23px;font-weight:700;letter-spacing:-.5px;}
-  .kpi .d{font-size:11.5px;margin-top:4px;}
-  .up{color:var(--green);}.down{color:var(--red);}.warn{color:var(--amber);}
+  .kpi .d{font-size:11.5px;margin-top:4px;color:var(--sub);}
   .card{background:var(--card);border:1px solid var(--line);border-radius:12px;padding:16px 18px;margin-bottom:6px;}
   .prog{height:22px;background:#eef0f4;border-radius:11px;overflow:hidden;position:relative;}
   .prog>i{display:block;height:100%;background:linear-gradient(90deg,#3a7afe,#2fa84f);}
   .prog span{position:absolute;left:11px;top:2px;font-size:12px;color:#fff;font-weight:600;}
-  .milestone{display:flex;justify-content:space-between;margin-top:7px;font-size:11px;color:var(--sub);}
-  .bar{display:flex;align-items:center;gap:10px;margin:8px 0;font-size:13px;}
-  .bar .lab{width:130px;color:var(--sub);}
-  .bar .track{flex:1;height:17px;background:#eef0f4;border-radius:9px;overflow:hidden;}
-  .bar .track>i{display:block;height:100%;border-radius:9px;}
-  .bar .amt{width:90px;text-align:right;font-weight:600;}
   .toolbar{display:flex;justify-content:space-between;align-items:center;margin-bottom:10px;flex-wrap:wrap;gap:8px;}
   .toolbar .cnt{font-size:12.5px;color:var(--sub);}
   .dl{background:var(--blue);color:#fff;border:none;padding:7px 14px;border-radius:8px;font-size:12.5px;font-weight:600;cursor:pointer;}
-  .dl:hover{background:#2f68df;}
   .tablewrap{background:var(--card);border:1px solid var(--line);border-radius:12px;overflow:auto;max-height:620px;}
   table{width:100%;border-collapse:collapse;font-size:12.5px;}
   th,td{padding:7px 10px;text-align:left;border-bottom:1px solid var(--line);white-space:nowrap;}
-  th{background:#f2f4f8;color:var(--navy);font-weight:600;font-size:11.5px;position:sticky;top:0;cursor:pointer;user-select:none;}
-  th:hover{background:#e9edf5;}
-  th .ar{color:var(--blue);font-size:10px;}
-  td.r,th.r{text-align:right;}
-  td.name{white-space:normal;min-width:200px;}
+  th{background:#f2f4f8;color:var(--navy);font-weight:600;font-size:11.5px;position:sticky;top:0;cursor:pointer;}
+  td.r,th.r{text-align:right;}td.name{white-space:normal;min-width:200px;}
   tbody tr:hover{background:#fafbfd;}
   .chip{display:inline-block;padding:1px 6px;border-radius:9px;font-size:10px;font-weight:600;}
   .c-rok{background:#ffe8e6;color:#c0392b;}.c-dir{background:#fff3d6;color:#a36a00;}.c-self{background:#e6f0ff;color:#2456b8;}
   .insight{display:flex;gap:10px;flex-wrap:wrap;}
   .ins{flex:1;min-width:230px;background:#fbfcfe;border:1px solid var(--line);border-left:3px solid var(--blue);border-radius:8px;padding:11px 13px;font-size:12.5px;}
   .ins b{color:var(--navy);}
-  .ladder{display:flex;gap:8px;flex-wrap:wrap;}
-  .step{flex:1;min-width:150px;background:#fbfcfe;border:1px solid var(--line);border-radius:8px;padding:10px 12px;font-size:12px;}
-  .step .n{font-weight:700;color:var(--blue);}
-  ul.act{list-style:none;font-size:13px;}
-  ul.act li{padding:7px 0 7px 24px;position:relative;border-bottom:1px dashed var(--line);}
-  ul.act li::before{content:"▸";position:absolute;left:6px;color:var(--blue);}
   .note{font-size:11.5px;color:var(--sub);margin-top:8px;}
-  .grid2{display:grid;grid-template-columns:1.05fr 1fr;gap:16px;}
+  .center{text-align:center;color:var(--sub);font-size:13px;padding:30px;}
   footer{margin-top:30px;font-size:11px;color:var(--sub);text-align:center;border-top:1px solid var(--line);padding-top:12px;}
-  @media(max-width:760px){.kpis{grid-template-columns:repeat(2,1fr);}.grid2{grid-template-columns:1fr;}}
 </style>
 </head>
 <body>
-<div class="wrap">
-  <header>
-    <div>
-      <h1>악성재고(진행종료) 소진 대시보드</h1>
-      <div style="font-size:12.5px;color:var(--sub);margin-top:3px;">담당 박윤정 · 9월 말 목표: 원가 자산감소 1억원</div>
-    </div>
-    <div class="meta">데이터 기준일 <b>2026.06.14</b><br>작성 2026.06.15 · 전주(6/4) 대비</div>
-  </header>
 
-  <nav class="tabs">
-    <button class="on" data-t="sum">📊 요약</button>
-    <button data-t="disc">🏷️ 할인 TOP20</button>
-    <button data-t="gift">🎁 사은품</button>
-    <button data-t="scrap">💀 폐기</button>
-    <button data-t="chan">📡 채널·정책</button>
-  </nav>
-
-  <!-- 요약 -->
-  <section class="tab on" id="sum">
-    <div class="kpis">
-      <div class="kpi"><div class="l">악성재고 자산</div><div class="v">4억2,525만</div><div class="d down">▼ 846만 (전주)</div></div>
-      <div class="kpi"><div class="l">목표 진척 (−1억)</div><div class="v">8.5%</div><div class="d">6월 마일스톤 56%</div></div>
-      <div class="kpi"><div class="l">판매속도(제품+SKU)</div><div class="v">일 275개</div><div class="d up">목표 230 +45 ✓</div></div>
-      <div class="kpi"><div class="l">폐기 후보</div><div class="v">162건</div><div class="d">168만 · 월말 상신</div></div>
-    </div>
-    <h2>목표 진척 — 9월 말까지 1억원 소진</h2>
-    <div class="card">
-      <div class="prog"><i style="width:8.5%"></i><span>8.5% · 846만</span></div>
-      <div class="milestone"><span>6월 −1,500만</span><span>7월 −4,500만</span><span>8월 −7,500만</span><span>9월 −1억</span></div>
-      <p class="note">푸시 전 자연소진만으로 6월 마일스톤 절반 돌파 — <b>앞서가는 중</b>. 단 '적극소진' 재고 1,926개가 약 3주 뒤 바닥 → 그 전에 방치 재고 특가 세팅 필요.</p>
-    </div>
-    <div class="grid2" style="margin-top:14px;">
-      <div>
-        <h2>자산 그룹 분해</h2>
-        <div class="card">
-          <div class="bar"><div class="lab">💀 방치 (푸시 타깃)</div><div class="track"><i style="width:88%;background:var(--red)"></i></div><div class="amt">약 3.7억</div></div>
-          <div class="bar"><div class="lab">적극+지지부진</div><div class="track"><i style="width:12%;background:var(--green)"></i></div><div class="amt">약 5,100만</div></div>
-          <p class="note">방치가 자산의 <b>88%</b> = 실제 성과 지점.</p>
-        </div>
-      </div>
-      <div>
-        <h2>이번 주 액션</h2>
-        <div class="card"><ul class="act">
-          <li>할인 TOP20 중 저속 2종 제외 → <b>18종 특가</b></li>
-          <li>사은품 연장후크류 중심 축소, 고가품 폐기 이동</li>
-          <li>폐기 162건 <b>월말 일괄 상신</b></li>
-          <li style="border:none;"><b>[요청]</b> 채널 수수료율·배송비 → 할인가 확정</li>
-        </ul></div>
-      </div>
-    </div>
-  </section>
-
-  <!-- 할인 -->
-  <section class="tab" id="disc">
-    <h2>할인 TOP20 — 진행종료 자산 상위 · 4주 목표 소진 3,708개</h2>
-    <div class="toolbar"><span class="cnt" id="disc-cnt"></span><button class="dl" onclick="dl('disc')">⬇ CSV 다운로드</button></div>
-    <div class="tablewrap"><table id="disc-t"></table></div>
-    <p class="note">제외 권고: 로즐리·Sorbet파자마(60일 판매 2·8개 저속). 제안가는 채널수수료·배송 차감 전 — 공헌이익 +1,000원 하한 확정 시 미세조정. 채널 칩: <span class="chip c-rok">쿠팡</span> <span class="chip c-dir">직진</span> <span class="chip c-self">자사몰계열</span></p>
-  </section>
-
-  <!-- 사은품 -->
-  <section class="tab" id="gift">
-    <h2>사은품 후보 — 판매0 대량 (실제 합 1,525만, 계획 1,800만 미달)</h2>
-    <div class="toolbar"><span class="cnt" id="gift-cnt"></span><button class="dl" onclick="dl('gift')">⬇ CSV 다운로드</button></div>
-    <div class="tablewrap"><table id="gift-t"></table></div>
-    <p class="note"><b>발견:</b> 진짜 저가 대량은 연장후크류(142만)뿐. 절반은 고가 슬립·로브 → 사은품 부적합. <b>사은품 200~300만으로 축소, 고가품은 폐기 이동</b> 권고.</p>
-  </section>
-
-  <!-- 폐기 -->
-  <section class="tab" id="scrap">
-    <h2>폐기 후보 162건 — 판매0 + 재고 5개 이하 (제품 126 + SKU 36)</h2>
-    <div class="toolbar"><span class="cnt" id="scrap-cnt"></span><button class="dl" onclick="dl('scrap')">⬇ CSV 다운로드</button></div>
-    <div class="tablewrap"><table id="scrap-t"></table></div>
-    <p class="note">대부분 1~5개 잔량이라 금액은 작지만(168만) 건수 정리 효과 큼. 월말 협의 일괄 상신용.</p>
-  </section>
-
-  <!-- 채널/정책 -->
-  <section class="tab" id="chan">
-    <h2>채널 인사이트 (직진/쿠팡 포함 정정)</h2>
-    <div class="card"><div class="insight">
-      <div class="ins"><b>쿠팡이 숨은 핵심</b><br>누디볼륨업 <span class="chip c-rok">쿠팡 74%</span> · 몰랑드 35% · 캔디팝/어깨끈 29% · 누드브라 24%. 자사몰만 걸면 놓침.</div>
-      <div class="ins"><b>직진(지그재그)</b><br>마르살라 <span class="chip c-dir">12%</span>·심플볼륨 11%만 의미. 과거 컸으나 식는 중.</div>
-      <div class="ins"><b>데이터 소스 정정</b><br>이지어드민 API는 쿠팡·직진 못 봄 → salesandstock(직진/로켓 분리)로 교체.</div>
-    </div></div>
-    <h2>가격 정책 — 공헌이익 3단계 사다리</h2>
-    <div class="card"><div class="ladder">
-      <div class="step"><span class="n">① 기본</span><br>공헌이익 +1,000원 하한</div>
-      <div class="step"><span class="n">② 가속</span><br>4주 미달 시 본전(0원)까지</div>
-      <div class="step"><span class="n">③ 역마진</span><br>방치 180일+ 한정, 누적 500만</div>
-    </div><p class="note">③ 후에도 안 나가면 사은품·폐기. 꼬다리(판매0·재고≤5)는 사다리 생략 즉시 폐기.</p></div>
-    <h2>사은품·폐기 계획 vs 실제</h2>
-    <div class="card"><div class="bar"><div class="lab">사은품 계획</div><div class="track"><i style="width:100%;background:#cdd3df"></i></div><div class="amt">1,800만</div></div>
-      <div class="bar"><div class="lab">사은품 실제</div><div class="track"><i style="width:85%;background:var(--amber)"></i></div><div class="amt">1,525만</div></div>
-      <div class="bar"><div class="lab">└ 저가대량(적합)</div><div class="track"><i style="width:8%;background:var(--green)"></i></div><div class="amt">142만</div></div>
-    </div>
-  </section>
-
-  <footer>
-    도로시와 악성재고 관리 · 데이터: 재고 리스크 레이더 + 판매채널(salesandstock) · 6/15 스냅샷<br>
-    측정: 6/4 진행종료 마킹분 고정, 신규 마킹 별도 집계 · 채널 분석 시 개인정보 미집계
-  </footer>
+<div id="login">
+  <div class="lcard">
+    <h1>악성재고 소진 대시보드</h1>
+    <p>도로시와 · 사내 로그인 필요</p>
+    <label>이메일</label>
+    <input id="email" type="email" autocomplete="username" placeholder="name@mmmd.kr">
+    <label>비밀번호</label>
+    <input id="pw" type="password" autocomplete="current-password" placeholder="••••••••">
+    <button id="loginBtn">로그인</button>
+    <div class="lerr" id="lerr"></div>
+  </div>
 </div>
 
-<script>
-const DATA={
- disc:{cols:[['순위','rank','r'],['상품명','name','name'],['현재고','stock','r'],['원가','cost','r'],['판매가','price','r'],['제안할인가','dprice','r'],['할인율','rate',''],['할인후마진','margin','r'],['60일판매','s60','r'],['4주목표','target','r'],['채널','chan','chip'],['비고','note','']],
- rows:[
- [1,'풀샷브라 볼륨업 백리스',6677,6169,15006,12000,'20%',5831,1450,880,'쿠13·자87',''],
- [2,'퍼스널컬러 컷 누드브라',4014,6599,25915,20700,'20%',14101,745,452,'쿠24·자72',''],
- [3,'[츠메르] 마르살라 세트',2386,8119,27694,20800,'25%',12681,171,120,'직12·자88','직진 비중'],
- [4,'[필러브라] 몰랑드 세트',2070,6983,25866,19400,'25%',12417,171,120,'쿠35·자65',''],
- [5,'풀샷브라 에어 홀가먼트',2526,4484,21734,15200,'30%',10716,56,47,'쿠16·자84',''],
- [6,'차르르 실크새틴 캐미솔 세트',1302,8624,34256,24000,'30%',15376,60,50,'자100',''],
- [7,'밀착 심리스 로우라이즈 삼각팬티',3732,2944,13066,10500,'20%',7556,475,288,'자100',''],
- [8,'풀샷 심리스 네모팬티',2278,4704,10798,8600,'20%',3896,586,356,'쿠5·자95',''],
- [9,'[모달80수] 친환경 지구팬티',2506,3682,18577,13000,'30%',9318,79,66,'쿠15·자85',''],
- [10,'풀샷 에어 홀가먼트 삼각 팬티',2493,2490,17855,13400,'25%',10910,109,76,'쿠16·자84',''],
- [11,'풀샷몰드 모달 라운드 끈나시(캡고정)',542,11200,30814,23100,'25%',11900,231,162,'자100',''],
- [12,'[필러브라] 누디볼륨업 세트',871,6731,24672,17300,'30%',10569,92,77,'쿠74·자26','쿠팡 우선'],
- [13,'[필러브라] 볼륨트위스트 세트',716,7993,28275,19800,'30%',11807,67,56,'자100',''],
- [14,'[필러브라] 캔디팝 세트',1370,4080,9507,7600,'20%',3520,640,388,'쿠29·자71',''],
- [15,'[필러브라] 로즐리 브라 단품',967,5721,21800,15300,'30%',9579,2,2,'자100','저속-할인부적합'],
- [16,'[필러브라] 어깨끈없어도돼 브라 단품',1070,4964,22020,16500,'25%',11536,229,160,'쿠29·자71',''],
- [17,'Minimal Garments Sorbet Cotton Pajama Set',91,53000,112000,78400,'30%',25400,8,7,'자100','저속-할인부적합'],
- [18,'work, love, ballads 코튼 삼각팬티',2596,1833,8671,6500,'25%',4667,285,200,'자100',''],
- [19,'풀샷 에어 홀가먼트 삼각 팬티(구)',1773,2439,12181,8500,'30%',6061,55,46,'쿠16·자84',''],
- [20,'[츠메르] 심플볼륨 브라 단품',733,5847,24201,18200,'25%',12353,221,155,'직11·자89','직진 비중']
- ]},
- gift:{cols:[['상품명','name','name'],['수량','qty','r'],['원가단가(원)','unit','r'],['자산(만원)','asset','r'],['사은품적합도','fit','']],
- rows:[
- ['연장후크 2단',9563,54,52,'적합(초저가 대량)'],['연장후크 4단',9065,99,90,'적합(초저가 대량)'],['매쉬연장후크 4단',69,290,2,'적합'],['루아 티팬티',53,943,5,'적합'],['라이크가터 스타킹',81,2593,21,'적합'],['드로잉 미니 타투스티커',461,759,35,'적합'],['프리컷 심리스 팬티',398,1709,68,'적합'],['프리컷 심리스 브라렛 세트(라운드넥)',137,4964,68,'보통'],['[츠메르] 영혼브라 세트',93,6022,56,'보통'],['밀착 노와이어 브라 단품',116,7931,92,'보통'],['[츠메르] 시크릿글램 세트',60,8500,51,'보통'],['[3종 키트] 리본산타 이벤트웨어',76,8158,62,'보통'],['[4종 키트] 애쉬 벨벳바니 이벤트웨어',53,8868,47,'보통'],['[3종 키트] 벨벳바니 이벤트웨어',187,8449,158,'보통'],['시크릿 메이드 이벤트웨어',61,6885,42,'보통'],['화이트크리스마스 이벤트웨어',54,10926,59,'고단가(폐기 권고)'],['주피터 올인원 슬립',76,13026,99,'고단가(폐기 권고)'],['풀샷몰드 베이직 풀넥 폴라 워머티(캡고정)',70,14000,98,'고단가(폐기 권고)'],['미쉘 레이스 올인원 슬립',88,13977,123,'고단가(폐기 권고)'],['Minimal Garments Cozy Lounge Robe Set',54,55000,297,'고단가(폐기 권고)']
- ]},
- scrap:{cols:[['구분','t',''],['상품명','name','name'],['수량','qty','r']],rows:[]}
-};
-// 폐기 데이터 (구분|상품명|수량)
-DATA.scrap.rows=`제품|로맨틱하게 브라 단품|5
-제품|꽃레이스 니플패치|5
-제품|엔젤로나 슬립 (2P)|5
-제품|사이드홀 스타킹|5
-제품|[빅사이즈] 올데이 심리스 브라렛 단품|5
-제품|백리스 바프 브라렛 세트|5
-제품|끌로프 비키니(2P)|4
-제품|리본스트랩 티팬티|4
-제품|로에 브라렛 세트|4
-제품|사비나 믹스 스트랩 비키니 (2P)|4
-제품|[2종 키트] 루비우 이벤트웨어|4
-제품|플라워데이 원피스 파자마|4
-제품|[3종키트] 러브바니 이벤트웨어|4
-제품|앞여밈 캐미솔 (2P)|4
-제품|로맨틱 벨벳 파자마 (2P)|4
-제품|[필러브라] 볼륨 앞후크 세트|4
-제품|[풀샷몰드] 베이직 워머 캡내장 폴라티|4
-제품|[3종 구성] 슬리피 펀칭 파자마 세트|4
-제품|[보정나시] 글램바디 아쿠아 끈나시|3
-제품|[필러브라] 캔디팝 앞후크 브라 단품|3
-제품|티에리 나시 원피스|3
-제품|크림슨 나시 롱 원피스|3
-제품|파티퀸산타 이벤트웨어|3
-제품|랜덤_ 브라 단품(C,D)|3
-제품|[3종 키트] 러블리산타 이벤트웨어|3
-제품|팔레트 캐미솔 (2P)|3
-제품|데일리무드 삼각 팬티|3
-제품|[빅사이즈] 더블커버 브라렛 단품|3
-제품|시에나 브라렛 세트|3
-제품|[노브라웨어] 몸매보정 하이업 브라탑 단품|3
-제품|베니벨 파자마 가디건|2
-제품|[빅사이즈] 엘로니아 세트|2
-제품|[스트랩] All type|2
-제품|데인하이웨이스트 팬티|2
-제품|안나스트랩 세트|2
-제품|다용도 트래블 파우치|2
-제품|여리끈 레이스 팬티|2
-제품|[빅사이즈] 뉴데이 세트|2
-제품|[3종 키트] 메리산타 이벤트웨어|2
-제품|밀착무봉제 팬티|2
-제품|밀착 브이 팬티|2
-제품|이자벨 파자마 (2P)|2
-제품|[5종 키트] 산타바니 이벤트웨어|2
-제품|[묶음팬티] 플라비 팬티 (3P)|2
-제품|[2종 키트] 문라이트 슬립 이벤트웨어|2
-제품|[빅사이즈] 벅썸 커버 브라렛 단품|2
-제품|[빅사이즈] 루비아 홑겹 세트|2
-제품|실키 레이스 원피스 파자마|2
-제품|[필러브라] 스위티 왕뽕브라 세트|2
-제품|[필러브라] 볼륨베이스 세트|2
-제품|조이레이스 반컵브라 세트|2
-제품|쫀득퓨징 삼각팬티|2
-제품|볼륨바이블2 퓨징 삼각팬티|2
-제품|헤비 오버 5부 팬츠|2
-제품|투포켓 에코백|2
-제품|데이심플 팬티|1
-제품|베니벨 파자마 반바지|1
-제품|언발큐니 브라렛 set|1
-제품|세느앙 브라 단품|1
-제품|[필러브라] 디얼마이 세트|1
-제품|페이크 미니 타투스티커|1
-제품|반컵볼륨 세트|1
-제품|사이드딥 레이스 팬티|1
-제품|[인견] 찰랑찰랑 이너원피스 슬립 (숏타입)|1
-제품|시크릿 누디라인 속바지|1
-제품|아스케 브라렛 set|1
-제품|[2종 키트] 엔젤링 이벤트웨어|1
-제품|마멜 트임 슬립 (2P)|1
-제품|[피치백] 더블업 힙업팬티|1
-제품|체크 파자마 바지 5부|1
-제품|[빅사이즈] 카푸치노 브라렛 세트|1
-제품|콜링레이스 팬티|1
-제품|[빅사이즈] 레이븐 홑겹 세트|1
-제품|[츠메르] 데일리볼륨 세트|1
-제품|[츠메르] 마이볼륨 세트|1
-제품|카미르 올인원|1
-제품|키스미 슬립 (2P)|1
-제품|루피앙 티팬티|1
-제품|데이데이 브라렛 단품|1
-제품|바나프 브라렛 단품|1
-제품|샤이니 소프트 모노키니|1
-제품|테디 곰돌이 파자마 (2P)|1
-제품|[스트랩] 믹싱 브라렛 세트|1
-제품|발렌 노와이어 세트|1
-제품|링클 호피 비키니 (2P)|1
-제품|볼륨바이블 팬티|1
-제품|[2종 키트] 러브픽션 이벤트웨어|1
-제품|[빅사이즈] 밀착 심리스 브라렛 단품|1
-제품|체크무드 기모 파자마 (2P)|1
-제품|메이트 수면잠옷 (2P)|1
-제품|헬레나 세트|1
-제품|[2종 키트] 초커 슬립|1
-제품|코코블링 트위스트 수면잠옷 (2P)|1
-제품|[뱃살보정] 파워슬림 매쉬 집업 똥배팬티|1
-제품|[빅사이즈] 엠보 심리스 브라렛 단품|1
-제품|[노브라웨어] 솔티 크롭 캡나시|1
-제품|퓨어레이시 나시 파자마 (2P)|1
-제품|프릴리본 레이스 나시 파자마 (2P)|1
-제품|[츠메르] 컬러볼륨 세트|1
-제품|[필러브라] 더블업 볼륨브라 세트|1
-제품|베이직 반컵브라 세트|1
-제품|베이직 앞후크 브라 세트|1
-제품|[츠메르] 뮤즈글램 세트|1
-제품|[츠메르] 앨린 심리스 볼륨브라 세트|1
-제품|[필러브라] 베이글 볼륨 세트|1
-제품|[필러브라] 퍼펙트커버 앞후크 세트|1
-제품|[필러브라] 볼륨셔링 세트|1
-제품|누디웨이브 밀착 브라 세트|1
-제품|[노브라웨어] 솔리드 백리스 크롭 캡나시|1
-제품|[노브라웨어] 하트넥 튜브탑 캡나시|1
-제품|[풀샷몰드] 부유방커버 베이직 캡나시|1
-제품|[츠메르] 5cm 울트라푸쉬 심리스 브라 세트|1
-제품|[풀샷몰드] 모달 라운드 크롭 캡나시|1
-제품|영혼브라 퓨징 삼각팬티|1
-제품|어반시크 래쉬키니(2P)|1
-제품|포그니 핫 속바지|1
-제품|프리즌 홑겹 set|1
-제품|에스닉와이드팬츠|1
-제품|막스 조거 팬츠|1
-제품|클래식 린넨 5부 팬츠|1
-제품|쿨링 헨리넥 셔츠|1
-제품|록스 스트라이프 셔츠|1
-제품|마틴 린넨 와이드 팬츠|1
-제품|브리즈 헨리넥 셔츠|1
-제품|심플 클립 팔찌|1
-제품|헬로우 지브라 파자마 (2P)|1
-SKU|풀샷브라 저중심 솔리드 노와이어 로고 ver|1
-SKU|풀샷 일체형 슬림패드|1
-SKU|풀샷 일체형 슬림패드|1
-SKU|라인핏 부츠컷 레깅스|3
-SKU|라인핏 부츠컷 레깅스|2
-SKU|[5PACK] 베이직 코튼 삼각팬티|3
-SKU|[5PACK] 베이직 코튼 삼각팬티|2
-SKU|[5PACK] 베이직 코튼 삼각팬티|1
-SKU|[5PACK] 베이직 코튼 삼각팬티|1
-SKU|[3PACK] 베이직 코튼 삼각팬티|5
-SKU|[3PACK] 베이직 코튼 삼각팬티|4
-SKU|[3PACK] 베이직 코튼 삼각팬티|4
-SKU|[3PACK] 베이직 코튼 삼각팬티|4
-SKU|[3PACK] 베이직 코튼 삼각팬티|4
-SKU|[3PACK] 베이직 코튼 삼각팬티|4
-SKU|[3PACK] 베이직 코튼 삼각팬티|4
-SKU|[3PACK] 베이직 코튼 삼각팬티|3
-SKU|[3PACK] 베이직 코튼 삼각팬티|3
-SKU|[3PACK] 베이직 코튼 삼각팬티|3
-SKU|[3PACK] 베이직 코튼 삼각팬티|3
-SKU|[3PACK] 베이직 코튼 삼각팬티|3
-SKU|[3PACK] 베이직 코튼 삼각팬티|3
-SKU|[3PACK] 베이직 코튼 삼각팬티|2
-SKU|[3PACK] 베이직 코튼 삼각팬티|2
-SKU|[3PACK] 베이직 코튼 삼각팬티|2
-SKU|[3PACK] 베이직 코튼 삼각팬티|2
-SKU|[3PACK] 베이직 코튼 삼각팬티|2
-SKU|[3PACK] 베이직 코튼 삼각팬티|2
-SKU|[3PACK] 베이직 코튼 삼각팬티|1
-SKU|딥브이 커버 니트 모노키니 (Short)|3
-SKU|[필러브라] 여신브라 브라 단품|2
-SKU|[필러브라] 소프트볼륨 세트|3
-SKU|[필러브라] 소프트볼륨 세트|2
-SKU|[필러브라] 소프트볼륨 세트|2
-SKU|[필러브라] 소프트볼륨 세트|2
-SKU|[필러브라] 소프트볼륨 세트|2`.split('\n').map(l=>l.split('|')).map(a=>[a[0],a[1],+a[2]]);
+<div id="app">
+  <div class="wrap">
+    <header>
+      <div>
+        <h1>악성재고(진행종료) 소진 대시보드</h1>
+        <div style="font-size:12.5px;color:var(--sub);margin-top:3px;">담당 박윤정 · 9월 말 목표: 원가 자산감소 1억원</div>
+      </div>
+      <div class="meta">데이터 기준일 <b id="ddate">—</b> · <a id="logout">로그아웃</a></div>
+    </header>
+    <nav class="tabs">
+      <button class="on" data-t="sum">요약</button>
+      <button data-t="disc">할인 TOP20</button>
+      <button data-t="gift">사은품</button>
+      <button data-t="scrap">폐기</button>
+      <button data-t="chan">채널·정책</button>
+    </nav>
 
-const chipHtml=s=>s.split('·').map(p=>{let c='c-self';if(p.startsWith('쿠'))c='c-rok';else if(p.startsWith('직'))c='c-dir';return '<span class="chip '+c+'">'+p+'</span>';}).join(' ');
-function render(key){
-  const d=DATA[key], t=document.getElementById(key+'-t');
-  let h='<thead><tr>'+d.cols.map((c,i)=>'<th class="'+(c[2]==='r'?'r':'')+'" onclick="sortT(\''+key+'\','+i+')">'+c[0]+' <span class="ar" id="ar-'+key+'-'+i+'"></span></th>').join('')+'</tr></thead><tbody>';
-  d.rows.forEach(r=>{
-    h+='<tr>'+d.cols.map((c,i)=>{
-      let v=r[i], cls=c[2]==='r'?'r':(c[2]==='name'?'name':'');
-      if(c[2]==='chip') return '<td>'+chipHtml(String(v))+'</td>';
-      if(c[2]==='r'&&typeof v==='number') v=v.toLocaleString();
-      return '<td class="'+cls+'">'+v+'</td>';
-    }).join('')+'</tr>';
-  });
-  t.innerHTML=h+'</tbody>';
-  const cn=document.getElementById(key+'-cnt'); if(cn) cn.textContent=d.rows.length+'건';
+    <section class="tab on" id="sum">
+      <div class="kpis" id="kpis"></div>
+      <h2>목표 진척 — 9월 말까지 1억원 소진</h2>
+      <div class="card">
+        <div class="prog"><i id="progbar" style="width:0%"></i><span id="progtxt"></span></div>
+        <div style="display:flex;justify-content:space-between;font-size:11px;color:var(--sub);margin-top:5px"><span>6월 −1,500만</span><span>7월 −4,500만</span><span>8월 −7,500만</span><span>9월 −1억</span></div>
+        <p class="note">푸시 전 자연소진만으로 6월 마일스톤 절반 돌파 — 앞서가는 중. 적극소진 잔여 <b id="active">—</b>개가 약 3주 뒤 바닥 → 방치 재고 특가 세팅 필요.</p>
+      </div>
+    </section>
+
+    <section class="tab" id="disc">
+      <h2>할인 TOP20 — 진행종료 자산 상위</h2>
+      <div class="toolbar"><span class="cnt" id="disc-cnt"></span><button class="dl" onclick="dl('disc')">⬇ CSV</button></div>
+      <div class="tablewrap"><table id="disc-t"></table></div>
+      <p class="note">채널: <span class="chip c-rok">쿠팡</span> <span class="chip c-dir">직진</span> <span class="chip c-self">자사몰</span> · 제안가는 채널수수료·배송 차감 전.</p>
+    </section>
+
+    <section class="tab" id="gift">
+      <h2>사은품 후보 — 판매0 대량 (실제 <span id="giftreal">—</span>)</h2>
+      <div class="toolbar"><span class="cnt" id="gift-cnt"></span><button class="dl" onclick="dl('gift')">⬇ CSV</button></div>
+      <div class="tablewrap"><table id="gift-t"></table></div>
+    </section>
+
+    <section class="tab" id="scrap">
+      <h2>폐기 후보 — 판매0 + 재고 5개 이하</h2>
+      <div class="toolbar"><span class="cnt" id="scrap-cnt"></span><button class="dl" onclick="dl('scrap')">⬇ CSV</button></div>
+      <div class="tablewrap"><table id="scrap-t"></table></div>
+    </section>
+
+    <section class="tab" id="chan">
+      <h2>채널 인사이트</h2>
+      <div class="card"><div class="insight">
+        <div class="ins"><b>쿠팡이 숨은 핵심</b><br>누디볼륨업 <span class="chip c-rok">쿠팡 74%</span> · 몰랑드 35% · 캔디팝/어깨끈 29% · 누드브라 24%.</div>
+        <div class="ins"><b>직진(지그재그)</b><br>마르살라 12%·심플볼륨 11%만 의미. 식는 중.</div>
+      </div></div>
+      <h2>가격 정책 — 공헌이익 3단계 사다리</h2>
+      <div class="card"><div class="insight">
+        <div class="ins"><b>① 기본</b> 공헌이익 +1,000원 하한</div>
+        <div class="ins"><b>② 가속</b> 4주 미달 시 본전(0원)</div>
+        <div class="ins"><b>③ 역마진</b> 방치 180일+ 한정, 누적 500만</div>
+      </div></div>
+    </section>
+
+    <footer>도로시와 악성재고 관리 · 데이터는 Supabase(로그인 필요)에서 로드 · 개인정보 미집계</footer>
+  </div>
+</div>
+
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+<script>
+const SB_URL='https://lcduajxthzutwjdzmscf.supabase.co';
+const SB_KEY='sb_publishable_dEVDm3_ca_PwLWro--wogw_HGA8L6T6';
+const sb=window.supabase.createClient(SB_URL,SB_KEY);
+const $=s=>document.querySelector(s);
+let STORE={};
+
+async function boot(){
+  const {data:{session}}=await sb.auth.getSession();
+  if(session) showApp(); else $('#login').style.display='flex';
 }
-let sortState={};
-function sortT(key,col){
-  const d=DATA[key];
-  const dir=(sortState[key+col]=-(sortState[key+col]||1));
-  d.rows.sort((a,b)=>{let x=a[col],y=b[col];if(typeof x==='number'&&typeof y==='number')return (x-y)*dir;return String(x).localeCompare(String(y),'ko')*dir;});
-  document.querySelectorAll('[id^=ar-'+key+'-]').forEach(e=>e.textContent='');
-  document.getElementById('ar-'+key+'-'+col).textContent=dir>0?'▲':'▼';
-  render(key);
+$('#loginBtn').onclick=async()=>{
+  $('#lerr').textContent='';
+  const {error}=await sb.auth.signInWithPassword({email:$('#email').value.trim(),password:$('#pw').value});
+  if(error){$('#lerr').textContent='로그인 실패: '+error.message;return;}
+  showApp();
+};
+$('#pw').addEventListener('keydown',e=>{if(e.key==='Enter')$('#loginBtn').click();});
+$('#logout').onclick=async()=>{await sb.auth.signOut();location.reload();};
+
+async function showApp(){
+  $('#login').style.display='none';
+  $('#app').style.display='block';
+  const [su,di,gi,sc]=await Promise.all([
+    sb.from('ds_summary').select('*'),
+    sb.from('ds_discount').select('*').order('rank'),
+    sb.from('ds_gift').select('*').order('asset',{ascending:false}),
+    sb.from('ds_scrap').select('*')
+  ]);
+  const sm={}; (su.data||[]).forEach(r=>sm[r.k]=r.v);
+  STORE={disc:di.data||[],gift:gi.data||[],scrap:sc.data||[]};
+  renderKpi(sm); renderDisc(); renderGift(); renderScrap();
+}
+
+function renderKpi(s){
+  $('#ddate').textContent=s.data_date||'—';
+  $('#active').textContent=s.active_remain||'—';
+  $('#giftreal').textContent=s.gift_real||'';
+  const k=[['악성재고 자산',s.asset,(s.asset_delta||'')+' (전주)'],['목표 진척 (−1억)',(s.progress||'0')+'%','6월 마일스톤 '+(s.milestone6||'')+'%'],['판매속도(제품+SKU)','일 '+(s.speed||'')+'개','목표 '+(s.speed_target||'')+' 대비 +'+((+s.speed)-(+s.speed_target))],['폐기 후보',(s.scrap_cnt||'')+'건',(s.scrap_asset||'')+' · 월말 상신']];
+  $('#kpis').innerHTML=k.map(x=>`<div class="kpi"><div class="l">${x[0]}</div><div class="v">${x[1]}</div><div class="d">${x[2]}</div></div>`).join('');
+  const p=s.progress||'0';
+  $('#progbar').style.width=p+'%'; $('#progtxt').textContent=p+'% · '+(s.asset_delta||'').replace('-','')+' 소진';
+}
+function chipHtml(s){return String(s||'').split('·').map(p=>{let c='c-self';if(p.startsWith('쿠'))c='c-rok';else if(p.startsWith('직'))c='c-dir';return `<span class="chip ${c}">${p}</span>`;}).join(' ');}
+function tbl(el,cols,rows){
+  let h='<thead><tr>'+cols.map(c=>`<th class="${c.r?'r':''}">${c.t}</th>`).join('')+'</tr></thead><tbody>';
+  rows.forEach(r=>{h+='<tr>'+cols.map(c=>{let v=r[c.k];if(c.chip)return `<td>${chipHtml(v)}</td>`;if(c.r&&typeof v==='number')v=(v||0).toLocaleString();return `<td class="${c.r?'r':(c.name?'name':'')}">${v??''}</td>`;}).join('')+'</tr>';});
+  el.innerHTML=h+'</tbody>';
+}
+function renderDisc(){
+  tbl($('#disc-t'),[{t:'순위',k:'rank',r:1},{t:'상품명',k:'name',name:1},{t:'현재고',k:'stock',r:1},{t:'원가',k:'cost',r:1},{t:'판매가',k:'price',r:1},{t:'제안가',k:'dprice',r:1},{t:'할인율',k:'rate'},{t:'할인후마진',k:'margin',r:1},{t:'60일',k:'s60',r:1},{t:'4주목표',k:'target',r:1},{t:'채널',k:'channel',chip:1},{t:'비고',k:'note'}],STORE.disc);
+  $('#disc-cnt').textContent=STORE.disc.length+'건';
+}
+function renderGift(){
+  tbl($('#gift-t'),[{t:'상품명',k:'name',name:1},{t:'수량',k:'qty',r:1},{t:'원가단가',k:'unit',r:1},{t:'자산(만)',k:'asset',r:1},{t:'적합도',k:'fit'}],STORE.gift);
+  $('#gift-cnt').textContent=STORE.gift.length+'건';
+}
+function renderScrap(){
+  const el=$('#scrap-t');
+  if(!STORE.scrap.length){el.innerHTML='';$('#scrap-cnt').textContent='0건 (DB 적재 예정 — 162건은 CSV 보유)';return;}
+  tbl(el,[{t:'구분',k:'type'},{t:'상품명',k:'name',name:1},{t:'수량',k:'qty',r:1}],STORE.scrap);
+  $('#scrap-cnt').textContent=STORE.scrap.length+'건';
 }
 function dl(key){
-  const d=DATA[key];
-  const head=d.cols.map(c=>c[0]).join(',');
-  const body=d.rows.map(r=>d.cols.map((c,i)=>{let v=String(r[i]??'');return /[",]/.test(v)?'"'+v.replace(/"/g,'""')+'"':v;}).join(',')).join('\n');
-  const names={disc:'할인TOP20',gift:'사은품후보',scrap:'폐기리스트'};
-  const blob=new Blob(['﻿'+head+'\n'+body],{type:'text/csv;charset=utf-8'});
-  const a=document.createElement('a');a.href=URL.createObjectURL(blob);a.download=names[key]+'_2026-06-15.csv';a.click();
+  const rows=STORE[key]; if(!rows||!rows.length)return;
+  const cols=Object.keys(rows[0]);
+  const csv=cols.join(',')+'\n'+rows.map(r=>cols.map(c=>{let v=String(r[c]??'');return /[",]/.test(v)?'"'+v.replace(/"/g,'""')+'"':v;}).join(',')).join('\n');
+  const a=document.createElement('a');a.href=URL.createObjectURL(new Blob(['﻿'+csv],{type:'text/csv;charset=utf-8'}));a.download=key+'_2026-06-15.csv';a.click();
 }
 document.querySelectorAll('nav.tabs button').forEach(b=>b.onclick=()=>{
   document.querySelectorAll('nav.tabs button').forEach(x=>x.classList.remove('on'));
   document.querySelectorAll('section.tab').forEach(x=>x.classList.remove('on'));
-  b.classList.add('on');document.getElementById(b.dataset.t).classList.add('on');
+  b.classList.add('on');$('#'+b.dataset.t).classList.add('on');
 });
-['disc','gift','scrap'].forEach(render);
+boot();
 </script>
 </body>
 </html>
