@@ -19,7 +19,7 @@
   .lerr{color:var(--red);font-size:12.5px;margin-top:12px;min-height:16px;}
   /* app */
   #app{display:none;}
-  .wrap{max-width:1180px;margin:0 auto;padding:24px 20px 60px;}
+  .wrap{max-width:1360px;margin:0 auto;padding:24px 20px 60px;}
   header{display:flex;justify-content:space-between;align-items:flex-end;border-bottom:2px solid var(--navy);padding-bottom:12px;flex-wrap:wrap;gap:8px;}
   header h1{font-size:21px;color:var(--navy);}
   header .meta{font-size:12.5px;color:var(--sub);text-align:right;}
@@ -42,7 +42,7 @@
   .toolbar{display:flex;justify-content:space-between;align-items:center;margin-bottom:10px;flex-wrap:wrap;gap:8px;}
   .toolbar .cnt{font-size:12.5px;color:var(--sub);}
   .dl{background:var(--blue);color:#fff;border:none;padding:7px 14px;border-radius:8px;font-size:12.5px;font-weight:600;cursor:pointer;}
-  .tablewrap{background:var(--card);border:1px solid var(--line);border-radius:12px;overflow:auto;max-height:620px;}
+  .tablewrap{background:var(--card);border:1px solid var(--line);border-radius:12px;overflow:auto;max-height:1100px;}
   table{width:100%;border-collapse:collapse;font-size:12.5px;}
   th,td{padding:7px 10px;text-align:left;border-bottom:1px solid var(--line);white-space:nowrap;}
   th{background:#f2f4f8;color:var(--navy);font-weight:600;font-size:11.5px;position:sticky;top:0;cursor:pointer;}
@@ -198,7 +198,7 @@ function renderDisc(){
   // 정렬: 1차인하+할인강행 → 1차인하 → 나머지, 같은 그룹은 순위순
   STORE.disc.sort((a,b)=>{const sv=x=>(x.drop&&x.gang)?0:(x.drop?1:2);return sv(a)-sv(b)||(+a.rank)-(+b.rank);});
   const cmCell=r=>{const v=r.cmcur||0;const col=v<0?'#c0392b':(v<1000?'#a36a00':'#1d2433');return `<td class="r" style="font-weight:600;color:${col}">${v.toLocaleString()}</td>`;};
-  const stCell=r=>{if(r.gang)return '<td><span class="chip c-rok">할인강행</span></td>';if((r.cmcur||0)<0)return '<td><span class="chip c-dir">적자</span></td>';if((r.cmcur||0)<1000)return '<td><span class="chip" style="background:#fff3d6;color:#a36a00">하한미달</span></td>';return '<td><span class="chip" style="background:#e3f6e9;color:#1f7a3d">OK</span></td>';};
+  const stCell=r=>{if(r.gang&&r.drop)return '<td><span class="chip c-rok">할인강행</span></td>';if(r.gang&&(r.cmcur||0)<1000)return '<td><span class="chip" style="background:#fde4cf;color:#b5460f">공헌이익 저조</span></td>';if((r.cmcur||0)<0)return '<td><span class="chip c-dir">적자</span></td>';if((r.cmcur||0)<1000)return '<td><span class="chip" style="background:#fff3d6;color:#a36a00">하한미달</span></td>';return '<td><span class="chip" style="background:#e3f6e9;color:#1f7a3d">OK</span></td>';};
   const dropCell=r=>r.drop?'<td><span class="chip" style="background:#fff7cc;color:#8a6d00">1차인하</span></td>':'<td></td>';
   tbl($('#disc-t'),[{t:'순위',k:'rank',r:1},{t:'상품명',k:'name',name:1},{t:'이력',html:dropCell},{t:'현재고',k:'stock',r:1},{t:'원가',k:'cost',r:1},{t:'판매가',k:'price',r:1},{t:'공헌이익(현재판매가)',html:cmCell},{t:'상태',html:stCell},{t:'60일',k:'s60',r:1},{t:'4주목표',k:'target',r:1},{t:'채널',k:'channel',chip:1},{t:'비고',k:'note'}],STORE.disc);
   $('#disc-cnt').textContent=STORE.disc.length+'건';
