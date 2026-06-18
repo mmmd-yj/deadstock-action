@@ -103,7 +103,7 @@
       <div class="card" style="border-left:3px solid var(--red);margin-bottom:10px;"><div style="font-size:12.5px;" id="disc-loss">—</div></div>
       <div class="toolbar"><span class="cnt" id="disc-cnt"></span><button class="dl" onclick="dl('disc')">⬇ CSV</button></div>
       <div class="tablewrap"><table id="disc-t"></table></div>
-      <p class="note">채널: <span class="chip c-rok">쿠팡</span> <span class="chip c-dir">직진</span> <span class="chip c-self">자사몰</span> · <b>제안가 공헌이익</b>=판매가÷1.1−원가−수수료(35%)−포장비(200)−배송비(5만↑1,681/미만1,000), 이지어드민 라이브 원가 기준. <span style="color:var(--red)">빨강=적자</span>·<span style="color:#a36a00">주황=하한(+1,000)미달</span>. <span class="chip c-rok">할인강행</span>=적자 감수 소진 확정. · <b>판매가=마진계산기 기준</b>(주문평균가 아님). 할인율 <span style="color:var(--red)">빨강⚠</span>=현재가가 제안가보다 낮음 → 제안할인 재검토 필요.</p>
+      <p class="note">채널: <span class="chip c-rok">쿠팡</span> <span class="chip c-dir">직진</span> <span class="chip c-self">자사몰</span> · <b>공헌이익=현재 판매가 기준</b> (판매가÷1.1−원가−수수료35%−포장비200−배송비[5만↑1,681/미만1,000]), 이지어드민 라이브 원가·마진계산기 판매가. <span style="color:var(--red)">빨강=적자</span>·<span style="color:#a36a00">주황=하한(+1,000)미달</span>. <span class="chip c-rok">할인강행</span>=적자 감수 소진 확정. 정렬: 1차인하·할인강행 우선. 제안가·할인율은 제외(주문평균가 기반이라 부정확).</p>
     </section>
 
     <section class="tab" id="gift">
@@ -189,25 +189,32 @@ function tbl(el,cols,rows){
 }
 // 공헌이익 계산식 (마진계산기 역산·100% 검증, 수수료율 35%)
 const GANGHAENG=['96466','95712','24710','105024']; // 적자 감수 할인강행 확정 (2026-06-18)
-const DROPPED=['96466','92901','99253','95712'];      // 이미 1차 인하 완료
+const DROPPED=['96466','92901','99253','95712','105328','93325']; // 이미 1차 인하 완료 (+끈나시·work love ballads)
 // 판매가 = 마진계산기 기준 (주문평균가 대체, 2026-06-18). 윤정 검토표 선택값.
 const PRICE_MC={'96466':12900,'98679':28000,'47064':31000,'45612':27000,'94228':19000,'92901':19000,'99253':8900,'95712':10900,'86117':15000,'94238':12000,'105328':32000,'56005':28000,'48143':29000,'24710':10900,'92014':14900,'21126':25000,'105024':112000,'93325':8000,'94218':12000,'99893':30000};
 function cmCalc(price,cost){price=+price;cost=+cost;if(!price)return null;const ship=price>=50000?1681:1000;return Math.round(price/1.1-cost-price*0.35-200-ship);}
 function renderDisc(){
-  STORE.disc.forEach(r=>{if(PRICE_MC[r.code]!=null)r.price=PRICE_MC[r.code];r.conflict=(+r.dprice)>=(+r.price);r.rate=(+r.price>0)?Math.round((r.price-r.dprice)/r.price*100)+'%':r.rate;r.cm=cmCalc(r.dprice,r.cost);r.cmcur=cmCalc(r.price,r.cost);});
-  const cmCell=r=>{const v=r.cm||0;const col=v<0?'#c0392b':(v<1000?'#a36a00':'#1d2433');return `<td class="r" style="font-weight:600;color:${col}">${v.toLocaleString()}</td>`;};
-  const stCell=r=>{if(GANGHAENG.includes(String(r.code)))return '<td><span class="chip c-rok">할인강행</span></td>';if((r.cm||0)<1000)return '<td><span class="chip c-dir">하한미달</span></td>';return '<td><span class="chip" style="background:#e3f6e9;color:#1f7a3d">OK</span></td>';};
-  const dropCell=r=>DROPPED.includes(String(r.code))?'<td><span class="chip" style="background:#fff7cc;color:#8a6d00">1차인하</span></td>':'<td></td>';
-  tbl($('#disc-t'),[{t:'순위',k:'rank',r:1},{t:'상품명',k:'name',name:1},{t:'이력',html:dropCell},{t:'현재고',k:'stock',r:1},{t:'원가',k:'cost',r:1},{t:'판매가',k:'price',r:1},{t:'제안가',k:'dprice',r:1},{t:'할인율',html:r=>`<td style="${r.conflict?'color:#c0392b;font-weight:700':''}">${r.rate||''}${r.conflict?' ⚠':''}</td>`},{t:'제안가 공헌이익',html:cmCell},{t:'상태',html:stCell},{t:'60일',k:'s60',r:1},{t:'4주목표',k:'target',r:1},{t:'채널',k:'channel',chip:1},{t:'비고',k:'note'}],STORE.disc);
+  STORE.disc.forEach(r=>{if(PRICE_MC[r.code]!=null)r.price=PRICE_MC[r.code];r.gang=GANGHAENG.includes(String(r.code));r.drop=DROPPED.includes(String(r.code));r.cmcur=cmCalc(r.price,r.cost);});
+  // 정렬: 1차인하+할인강행 → 1차인하 → 나머지, 같은 그룹은 순위순
+  STORE.disc.sort((a,b)=>{const sv=x=>(x.drop&&x.gang)?0:(x.drop?1:2);return sv(a)-sv(b)||(+a.rank)-(+b.rank);});
+  const cmCell=r=>{const v=r.cmcur||0;const col=v<0?'#c0392b':(v<1000?'#a36a00':'#1d2433');return `<td class="r" style="font-weight:600;color:${col}">${v.toLocaleString()}</td>`;};
+  const stCell=r=>{if(r.gang)return '<td><span class="chip c-rok">할인강행</span></td>';if((r.cmcur||0)<0)return '<td><span class="chip c-dir">적자</span></td>';if((r.cmcur||0)<1000)return '<td><span class="chip" style="background:#fff3d6;color:#a36a00">하한미달</span></td>';return '<td><span class="chip" style="background:#e3f6e9;color:#1f7a3d">OK</span></td>';};
+  const dropCell=r=>r.drop?'<td><span class="chip" style="background:#fff7cc;color:#8a6d00">1차인하</span></td>':'<td></td>';
+  tbl($('#disc-t'),[{t:'순위',k:'rank',r:1},{t:'상품명',k:'name',name:1},{t:'이력',html:dropCell},{t:'현재고',k:'stock',r:1},{t:'원가',k:'cost',r:1},{t:'판매가',k:'price',r:1},{t:'공헌이익(현재판매가)',html:cmCell},{t:'상태',html:stCell},{t:'60일',k:'s60',r:1},{t:'4주목표',k:'target',r:1},{t:'채널',k:'channel',chip:1},{t:'비고',k:'note'}],STORE.disc);
   $('#disc-cnt').textContent=STORE.disc.length+'건';
   let l4=0,lall=0,neg=0;
-  STORE.disc.forEach(r=>{if((r.cm||0)<0){neg++;l4+=r.cm*(+r.target||0);lall+=r.cm*(+r.stock||0);}});
+  STORE.disc.forEach(r=>{if((r.cmcur||0)<0){neg++;l4+=r.cmcur*(+r.target||0);lall+=r.cmcur*(+r.stock||0);}});
   const el=$('#disc-loss');
-  if(el)el.innerHTML=`적자 <b>${neg}종</b> 할인강행 확정 (소진 우선·적자 감수) · 손실노출 4주목표 약 <b style="color:#c0392b">${Math.round(l4/10000).toLocaleString()}만</b> · 전량 소진 시 약 <b style="color:#c0392b">${Math.round(lall/10000).toLocaleString()}만</b>`;
+  if(el)el.innerHTML=`현재 판매가 기준 적자 <b>${neg}종</b> · 손실노출 4주목표 약 <b style="color:#c0392b">${Math.round(l4/10000).toLocaleString()}만</b> · 전량 약 <b style="color:#c0392b">${Math.round(lall/10000).toLocaleString()}만</b> · 할인강행 확정 4종(백리스·네모팬티·캔디팝·Sorbet)`;
 }
 function renderGift(){
-  tbl($('#gift-t'),[{t:'상품명',k:'name',name:1},{t:'수량',k:'qty',r:1},{t:'원가단가',k:'unit',r:1},{t:'자산(만)',k:'asset',r:1},{t:'적합도',k:'fit'}],STORE.gift);
-  $('#gift-cnt').textContent=STORE.gift.length+'건';
+  // 고단가(폐기권고) 5종은 할인으로 전환 → 사은품에서 제외. 적합→보통 순 정렬.
+  const rows=STORE.gift.filter(r=>!String(r.fit||'').includes('고단가'));
+  const ord=f=>String(f||'').startsWith('적합')?0:(String(f||'').startsWith('보통')?1:2);
+  rows.sort((a,b)=>ord(a.fit)-ord(b.fit)||(+b.asset||0)-(+a.asset||0));
+  const fitCell=r=>{const f=String(r.fit||'');const c=f.startsWith('적합')?'background:#e3f6e9;color:#1f7a3d':(f.startsWith('보통')?'background:#fff3d6;color:#a36a00':'background:#eef0f4;color:#5f5e5a');return `<td><span class="chip" style="${c}">${f}</span></td>`;};
+  tbl($('#gift-t'),[{t:'상품명',k:'name',name:1},{t:'수량',k:'qty',r:1},{t:'원가단가',k:'unit',r:1},{t:'자산(만)',k:'asset',r:1},{t:'적합도',html:fitCell}],rows);
+  $('#gift-cnt').textContent=rows.length+'건 (고단가 5종 할인 전환·제외)';
 }
 function renderScrap(){
   const el=$('#scrap-t');
