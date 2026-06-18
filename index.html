@@ -105,10 +105,10 @@
     </section>
 
     <section class="tab" id="gift">
-      <h2>사은품 후보 — 판매0 대량 (자산 합계 1,525만 · 목표 1,800만)</h2>
+      <h2>사은품 후보 — 적합·보통 품목 (고단가 5종은 할인 전환·제외)</h2>
       <div class="toolbar"><span class="cnt" id="gift-cnt"></span><button class="dl" onclick="dl('gift')">⬇ CSV</button></div>
       <div class="tablewrap"><table id="gift-t"></table></div>
-      <p class="note">고단가(폐기권고) 5종은 할인 전환 검토 중. 자산 합계 1,525만(엄격 기준: 판매0+대량)으로 목표 1,800만에 미달.</p>
+      <p class="note">고단가 5종(자산 676만)은 할인 전환으로 사은품에서 제외. (원래 후보 1,525만 = 사은품 849만 + 고단가 676만)</p>
     </section>
 
     <section class="tab" id="scrap">
@@ -198,7 +198,7 @@ function renderChan(){
 function renderKpi(s){
   $('#ddate').textContent=s.data_date||'—';
   $('#active').textContent=s.active_remain||'—';
-  $('#giftreal').textContent=s.gift_real||'';
+  {const _g=$('#giftreal');if(_g)_g.textContent=s.gift_real||'';}
   const k=[['악성재고 자산',s.asset,(s.asset_delta||'')+' (전주)'],['목표 진척 (−1억)',(s.progress||'0')+'%','6월 마일스톤 '+(s.milestone6||'')+'%'],['판매속도(제품+SKU)','일 '+(s.speed||'')+'개','목표 '+(s.speed_target||'')+' 대비 +'+((+s.speed)-(+s.speed_target))],['폐기 후보',(s.scrap_cnt||'')+'건',(s.scrap_asset||'')+' · 월말 상신']];
   $('#kpis').innerHTML=k.map(x=>`<div class="kpi"><div class="l">${x[0]}</div><div class="v">${x[1]}</div><div class="d">${x[2]}</div></div>`).join('');
   const p=s.progress||'0';
@@ -227,7 +227,7 @@ function renderDisc(){
   if(el)el.innerHTML=`제안가 기준 적자 <b>${neg}종</b> · 손실노출 4주목표 약 <b style="color:#c0392b">${Math.round(l4/10000).toLocaleString()}만</b> · 전량 약 <b style="color:#c0392b">${Math.round(lall/10000).toLocaleString()}만</b> · 할인강행 4종(백리스·네모팬티·캔디팝·Sorbet)`;
 }
 function renderGift(){
-  const rows=STORE.gift.slice().sort((a,b)=>{const o=f=>String(f||'').startsWith('적합')?0:(String(f||'').startsWith('보통')?1:2);return o(a.fit)-o(b.fit)||(+b.asset||0)-(+a.asset||0);});
+  const rows=STORE.gift.filter(r=>!String(r.fit||'').includes('고단가')).sort((a,b)=>{const o=f=>String(f||'').startsWith('적합')?0:(String(f||'').startsWith('보통')?1:2);return o(a.fit)-o(b.fit)||(+b.asset||0)-(+a.asset||0);});
   const fitCell=r=>{const f=String(r.fit||'');const c=f.startsWith('적합')?'background:#e3f6e9;color:#1f7a3d':(f.startsWith('보통')?'background:#fff3d6;color:#a36a00':'background:#ffe8e6;color:#c0392b');return `<td><span class="chip" style="${c}">${f}</span></td>`;};
   tbl($('#gift-t'),[{t:'상품코드',k:'code'},{t:'상품명',k:'name',name:1},{t:'수량',k:'qty',r:1},{t:'원가단가',k:'unit',r:1},{t:'자산(만)',k:'asset',r:1},{t:'적합도',html:fitCell}],rows);
   const tot=rows.reduce((s,r)=>s+(+r.asset||0),0),totq=rows.reduce((s,r)=>s+(+r.qty||0),0);
