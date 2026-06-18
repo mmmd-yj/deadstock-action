@@ -123,8 +123,8 @@
       <h2>채널별 제품 배정 — 30일 판매 1위 채널 기준</h2>
       <p class="note" style="margin-bottom:12px">각 제품을 최근 30일 판매 비중이 가장 높은 채널에 배정. 그 채널을 우선 공략·할인 노출하면 소진 효율이 높음.</p>
       <div id="chan-alloc"></div>
-      <h2>지난주 액션 효과 — 주간 소진 추이 (이지어드민 출고 기준)</h2>
-      <p class="note" style="margin-bottom:10px">1차 인하 등 액션 품목의 주간 출고량. W3=지난주(6/11~17). W3/W1 1.2배↑=가속 · 0.85배↓=둔화. ※네모팬티 W2 243은 일시 급증(이상치).</p>
+      <h2>지난주 액션 효과 — 자사몰 주간 소진 (FINAL SALE 적용 채널)</h2>
+      <p class="note" style="margin-bottom:10px">1차 인하(자사몰 FINAL SALE) 품목의 자사몰 주간 주문량. W3=지난주(6/11~17). 직전최고(W1·W2 중 높은 값) 대비 1.2배↑=가속·0.85배↓=둔화. W2 전반 저점 후 W3 반등 — 특히 네모팬티 247·worklove 62 급증.</p>
       <div id="chan-fx"></div>
       <h2>가격 정책 — 공헌이익 3단계 사다리</h2>
       <div class="card"><div class="insight">
@@ -173,13 +173,13 @@ async function showApp(){
   STORE={disc:di.data||[],gift:gi.data||[],scrap:sc.data||[]};
   renderKpi(sm); renderDisc(); renderGift(); renderScrap(); renderChan(); renderFx();
 }
-// 지난주 액션 효과: 주간 출고량(이지어드민 stock_tx job=trans, 2026-06-18 조회). [상품,W1,W2,W3]
-const ACTION_FX=[["풀샷브라 볼륨업 백리스",134,168,180],["차르르 실크새틴 캐미솔",7,16,18],["밀착 심리스 로우라이즈",45,54,39],["풀샷 심리스 네모팬티",63,243,55],["풀샷몰드 모달 라운드 끈나시",33,21,32],["work, love, ballads 코튼팬티",31,40,78]];
+// 지난주 액션 효과: 자사몰(카페24) 주간 주문량(Marketing.cafe24 order items, 2026-06-18 조회). [상품,W1,W2,W3]
+const ACTION_FX=[["풀샷브라 볼륨업 백리스",115,88,100],["차르르 실크새틴 캐미솔",11,6,15],["밀착 심리스 로우라이즈",37,14,33],["풀샷 심리스 네모팬티",83,62,247],["풀샷몰드 모달 라운드 끈나시",16,11,18],["work, love, ballads 코튼팬티",40,24,62]];
 function renderFx(){
   const el=$('#chan-fx'); if(!el)return;
-  const judge=(w1,w3)=>{const r=w1?w3/w1:0;if(r>=1.2)return['가속','background:#e3f6e9;color:#1f7a3d'];if(r<=0.85)return['둔화','background:#ffe8e6;color:#c0392b'];return['횡보','background:#fff3d6;color:#a36a00'];};
-  el.innerHTML='<div class="tablewrap"><table><thead><tr><th>상품</th><th class="r">W1 (5/28~6/3)</th><th class="r">W2 (6/4~6/10)</th><th class="r">W3 지난주 (6/11~17)</th><th class="r">W3/W1</th><th>판정</th></tr></thead><tbody>'+
-    ACTION_FX.map(a=>{const n=a[0],w1=a[1],w2=a[2],w3=a[3];const j=judge(w1,w3);const ratio=w1?(w3/w1).toFixed(1)+'x':'-';return `<tr><td class="name">${n}</td><td class="r">${w1}</td><td class="r">${w2}</td><td class="r" style="font-weight:700">${w3}</td><td class="r">${ratio}</td><td><span class="chip" style="${j[1]}">${j[0]}</span></td></tr>`;}).join('')+
+  const judge=(w1,w2,w3)=>{const b=Math.max(w1,w2)||0;const r=b?w3/b:0;if(r>=1.2)return['가속','background:#e3f6e9;color:#1f7a3d'];if(r<=0.85)return['둔화','background:#ffe8e6;color:#c0392b'];return['변화없음','background:#fff3d6;color:#a36a00'];};
+  el.innerHTML='<div class="tablewrap"><table><thead><tr><th>상품</th><th class="r">W1 (5/28~6/3)</th><th class="r">W2 (6/4~6/10)</th><th class="r">W3 지난주 (6/11~17)</th><th class="r">W3/직전최고</th><th>판정</th></tr></thead><tbody>'+
+    ACTION_FX.map(a=>{const n=a[0],w1=a[1],w2=a[2],w3=a[3];const j=judge(w1,w2,w3);const b=Math.max(w1,w2);const ratio=b?(w3/b).toFixed(1)+'x':'-';return `<tr><td class="name">${n}</td><td class="r">${w1}</td><td class="r">${w2}</td><td class="r" style="font-weight:700">${w3}</td><td class="r">${ratio}</td><td><span class="chip" style="${j[1]}">${j[0]}</span></td></tr>`;}).join('')+
     '</tbody></table></div>';
 }
 function renderChan(){
