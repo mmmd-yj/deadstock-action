@@ -49,7 +49,7 @@
   td.r,th.r{text-align:right;}td.name{white-space:normal;min-width:200px;}
   tbody tr:hover{background:#fafbfd;}
   .chip{display:inline-block;padding:1px 6px;border-radius:9px;font-size:10px;font-weight:600;}
-  .c-rok{background:#ffe8e6;color:#c0392b;}.c-dir{background:#fff3d6;color:#a36a00;}.c-self{background:#e6f0ff;color:#2456b8;}
+  .c-rok{background:#ffe8e6;color:#c0392b;}.c-dir{background:#fff3d6;color:#a36a00;}.c-self{background:#e6f0ff;color:#2456b8;}.c-etc{background:#eef0f4;color:#5f5e5a;}
   .insight{display:flex;gap:10px;flex-wrap:wrap;}
   .ins{flex:1;min-width:230px;background:#fbfcfe;border:1px solid var(--line);border-left:3px solid var(--blue);border-radius:8px;padding:11px 13px;font-size:12.5px;}
   .ins b{color:var(--navy);}
@@ -180,7 +180,7 @@ function renderKpi(s){
   const p=s.progress||'0';
   $('#progbar').style.width=p+'%'; $('#progtxt').textContent=p+'% · '+(s.asset_delta||'').replace('-','')+' 소진';
 }
-function chipHtml(s){return String(s||'').split('·').map(p=>{let c='c-self';if(p.startsWith('쿠'))c='c-rok';else if(p.startsWith('직'))c='c-dir';return `<span class="chip ${c}">${p}</span>`;}).join(' ');}
+function chipHtml(s){return String(s||'').split('·').map(p=>{let c='c-etc';if(p.startsWith('쿠'))c='c-rok';else if(p.startsWith('직'))c='c-dir';else if(p.startsWith('자사'))c='c-self';return `<span class="chip ${c}">${p}</span>`;}).join(' ');}
 function tbl(el,cols,rows){
   let h='<thead><tr>'+cols.map(c=>`<th class="${c.r?'r':''}">${c.t}</th>`).join('')+'</tr></thead><tbody>';
   rows.forEach(r=>{h+='<tr>'+cols.map(c=>{let v=r[c.k];if(c.chip)return `<td>${chipHtml(v)}</td>`;if(c.r&&typeof v==='number')v=(v||0).toLocaleString();return `<td class="${c.r?'r':(c.name?'name':'')}">${v??''}</td>`;}).join('')+'</tr>';});
