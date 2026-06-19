@@ -131,7 +131,7 @@
       <p class="note" style="margin-bottom:12px">각 제품을 최근 30일 판매 비중이 가장 높은 채널에 배정. 그 채널을 우선 공략·할인 노출하면 소진 효율이 높음.</p>
       <div id="chan-alloc"></div>
       <h2>지난주 액션 효과 — 자사몰 주간 소진 (FINAL SALE 적용 채널)</h2>
-      <p class="note" style="margin-bottom:10px">1차 인하(자사몰 FINAL SALE) 품목의 자사몰 주간 주문량. W3=지난주(6/11~17). 직전최고(W1·W2 중 높은 값) 대비 1.2배↑=가속·0.85배↓=둔화. W2 전반 저점 후 W3 반등 — 특히 네모팬티 247·worklove 62 급증.</p>
+      <p class="note" style="margin-bottom:10px">1차 인하(자사몰 FINAL SALE) 품목의 자사몰 주간 주문량. W3=지난주(6/8~14). 직전최고(W1·W2 중 높은 값) 대비 1.2배↑=가속·0.85배↓=둔화. W3 차르르·worklove 가속(16·50), 백리스·로우라이즈·네모팬티·끈나시 둔화.</p>
       <div id="chan-fx"></div>
       <h2>가격 정책 — 공헌이익 3단계 사다리</h2>
       <div class="card"><div class="insight">
@@ -180,11 +180,11 @@ async function showApp(){
   STORE={disc:di.data||[],gift:gi.data||[],scrap:sc.data||[]};
   renderKpi(sm); renderDisc(); renderGift(); renderScrap(); renderChan(); renderFx();
 }
-const ACTION_FX=[["풀샷브라 볼륨업 백리스",115,88,100],["차르르 실크새틴 캐미솔",11,6,15],["밀착 심리스 로우라이즈",37,14,33],["풀샷 심리스 네모팬티",83,62,247],["풀샷몰드 모달 라운드 끈나시",16,11,18],["work, love, ballads 코튼팬티",40,24,62]];
+const ACTION_FX=[["풀샷브라 볼륨업 백리스",135,113,73],["차르르 실크새틴 캐미솔",9,5,16],["밀착 심리스 로우라이즈",37,21,18],["풀샷 심리스 네모팬티",74,76,62],["풀샷몰드 모달 라운드 끈나시",28,0,18],["work, love, ballads 코튼팬티",30,33,50]];
 function renderFx(){
   const el=$('#chan-fx'); if(!el)return;
   const judge=(w1,w2,w3)=>{const b=Math.max(w1,w2)||0;const r=b?w3/b:0;if(r>=1.2)return['가속','background:#e3f6e9;color:#1f7a3d'];if(r<=0.85)return['둔화','background:#ffe8e6;color:#c0392b'];return['변화없음','background:#fff3d6;color:#a36a00'];};
-  el.innerHTML='<div class="tablewrap"><table><thead><tr><th>상품</th><th class="r">W1 (5/28~6/3)</th><th class="r">W2 (6/4~6/10)</th><th class="r">W3 지난주 (6/11~17)</th><th class="r">W3/직전최고</th><th>판정</th></tr></thead><tbody>'+
+  el.innerHTML='<div class="tablewrap"><table><thead><tr><th>상품</th><th class="r">W1 (5/25~5/31)</th><th class="r">W2 (6/1~6/7)</th><th class="r">W3 지난주 (6/8~14)</th><th class="r">W3/직전최고</th><th>판정</th></tr></thead><tbody>'+
     ACTION_FX.map(a=>{const n=a[0],w1=a[1],w2=a[2],w3=a[3];const j=judge(w1,w2,w3);const b=Math.max(w1,w2);const ratio=b?(w3/b).toFixed(1)+'x':'-';return `<tr><td class="name">${n}</td><td class="r">${w1}</td><td class="r">${w2}</td><td class="r" style="font-weight:700">${w3}</td><td class="r">${ratio}</td><td><span class="chip" style="${j[1]}">${j[0]}</span></td></tr>`;}).join('')+
     '</tbody></table></div>';
 }
@@ -222,7 +222,7 @@ const GANGHAENG=['96466','95712','24710','105024'];
 const DROPPED=['96466','92901','99253','95712','105328','93325'];
 // 현재판매가 = 마진계산기 기준 (윤정 지정). 검토표 선택값.
 const PRICE_MC={'96466':12900,'98679':28000,'47064':31000,'45612':27000,'94228':19000,'92901':19000,'99253':8900,'95712':10900,'86117':15000,'94238':12000,'105328':32000,'56005':28000,'48143':29000,'24710':10900,'92014':14900,'21126':25000,'105024':112000,'93325':8000,'94218':12000,'99893':30000};
-const S60_MCP={'96466':2355,'98679':897,'47064':180,'45612':182,'94228':97,'92901':67,'99253':634,'95712':804,'86117':86,'94238':114,'105328':319,'56005':102,'48143':73,'24710':749,'92014':3,'21126':323,'105024':8,'93325':324,'94218':58,'99893':310};
+const S60_MCP={'96466':2391,'98679':939,'47064':188,'45612':183,'94228':100,'92901':74,'99253':643,'95712':812,'86117':88,'94238':114,'105328':326,'56005':102,'48143':74,'24710':764,'92014':3,'21126':325,'105024':8,'93325':327,'94218':58,'99893':315};
 function cmCalc(price,cost){price=+price;cost=+cost;if(!price)return null;const ship=price>=50000?1681:1000;return Math.round(price/1.1-cost-price*0.35-200-ship);}
 function renderDisc(){
   const NAME_FIX={'94218':'풀샷 에어 홀가먼트 삼각 팬티 (FREE)','94238':'풀샷 에어 홀가먼트 삼각 팬티 (XL)'};
