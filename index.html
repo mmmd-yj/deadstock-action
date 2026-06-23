@@ -192,16 +192,15 @@ function renderChan(){
   const el=$('#chan-alloc'); if(!el)return;
   const parse=s=>String(s||'').split('·').map(t=>{const m=String(t).trim().match(/^(.+?)(\d+)$/);return m?{ch:m[1].trim(),pct:+m[2]}:null;}).filter(Boolean).filter(x=>!x.ch.includes('수동발주'));
   const groups={};
-  STORE.disc.forEach(r=>{const ch=parse(r.channel);if(!ch.length)return;ch.sort((a,b)=>b.pct-a.pct);const ext=ch.filter(c=>!c.ch.includes('자사')).slice(0,2);ext.forEach((c,i)=>{(groups[c.ch]=groups[c.ch]||[]).push({name:r.name,pct:c.pct,rank:r.rank,pos:i+1});});});
+  STORE.disc.forEach(r=>{const ch=parse(r.channel);if(!ch.length)return;ch.sort((a,b)=>b.pct-a.pct);const ext=ch.filter(c=>!c.ch.includes('자사')).slice(0,1);ext.forEach(c=>{(groups[c.ch]=groups[c.ch]||[]).push({name:r.name,pct:c.pct,rank:r.rank});});});
   const order=Object.keys(groups).sort((a,b)=>groups[b].length-groups[a].length||a.localeCompare(b));
-  const intro='<p class="note" style="margin-bottom:10px">자사몰은 전 품목(20종) 공통 베이스 채널이라 제외하고, <b>자사 외 추가로 밀 채널</b> 1·2순위 기준으로 정리했습니다. 한 품목이 1·2순위 채널 양쪽에 표시됩니다.</p>';
+  const intro='<p class="note" style="margin-bottom:10px">자사몰은 전 품목(20종) 공통 베이스 채널이라 제외하고, <b>자사 외 가장 강한 채널(주력 1순위)</b> 기준으로 품목을 배치했습니다.</p>';
   const cls=c=>(c.includes('쿠팡')||c.includes('로켓'))?'c-rok':(c.includes('자사')?'c-self':(c.includes('직진')?'c-dir':(c.includes('에이블')?'c-ably':(c.includes('스마트')?'c-smart':(c.includes('무신사')?'c-musinsa':'c-etc')))));
   el.innerHTML=intro+order.map(ch=>{
-    const items=groups[ch].sort((a,b)=>(a.pos-b.pos)||(b.pct-a.pct));
-    const posTag=p=>p===1?'<span class="chip" style="background:#e6f0ff;color:#2456b8">1순위</span>':'<span class="chip" style="background:#eef0f4;color:#5f5e5a">2순위</span>';
+    const items=groups[ch].sort((a,b)=>(b.pct-a.pct));
     return `<div class="card" style="margin-bottom:10px"><div style="font-weight:700;color:var(--navy);margin-bottom:8px"><span class="chip ${cls(ch)}">${ch}</span> <span style="font-size:12px;color:var(--sub);font-weight:400">${items.length}종</span></div>`+
-      `<table><thead><tr><th style="width:50px">순위</th><th>상품명</th><th style="width:54px">구분</th><th class="r" style="width:90px">${ch} 비중</th></tr></thead><tbody>`+
-      items.map(it=>`<tr><td>${it.rank}</td><td class="name">${it.name}</td><td>${posTag(it.pos)}</td><td class="r" style="font-weight:600">${it.pct}%</td></tr>`).join('')+
+      `<table><thead><tr><th style="width:50px">순위</th><th>상품명</th><th class="r" style="width:90px">${ch} 비중</th></tr></thead><tbody>`+
+      items.map(it=>`<tr><td>${it.rank}</td><td class="name">${it.name}</td><td class="r" style="font-weight:600">${it.pct}%</td></tr>`).join('')+
       `</tbody></table></div>`;
   }).join('');
 }
