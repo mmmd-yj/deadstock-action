@@ -194,7 +194,7 @@ function renderChan(){
   const groups={};
   STORE.disc.forEach(r=>{const ch=parse(r.channel);if(!ch.length)return;ch.sort((a,b)=>b.pct-a.pct);const top=ch[0];(groups[top.ch]=groups[top.ch]||[]).push({name:r.name,pct:top.pct,rank:r.rank});});
   const order=Object.keys(groups).sort((a,b)=>groups[b].length-groups[a].length||a.localeCompare(b));
-  const cls=c=>c.includes('쿠팡')?'c-rok':(c.includes('자사')?'c-self':(c.includes('직진')?'c-dir':(c.includes('에이블')?'c-ably':(c.includes('스마트')?'c-smart':(c.includes('무신사')?'c-musinsa':'c-etc')))));
+  const cls=c=>(c.includes('쿠팡')||c.includes('로켓'))?'c-rok':(c.includes('자사')?'c-self':(c.includes('직진')?'c-dir':(c.includes('에이블')?'c-ably':(c.includes('스마트')?'c-smart':(c.includes('무신사')?'c-musinsa':'c-etc')))));
   el.innerHTML=order.map(ch=>{
     const items=groups[ch].sort((a,b)=>(+a.rank)-(+b.rank));
     return `<div class="card" style="margin-bottom:10px"><div style="font-weight:700;color:var(--navy);margin-bottom:8px"><span class="chip ${cls(ch)}">${ch}</span> <span style="font-size:12px;color:var(--sub);font-weight:400">${items.length}종</span></div>`+
@@ -212,7 +212,7 @@ function renderKpi(s){
   const p=s.progress||'0';
   $('#progbar').style.width=p+'%'; $('#progtxt').textContent=p+'% · '+(s.asset_delta||'').replace('-','')+' 소진';
 }
-function chipHtml(s){return String(s||'').split('·').map(p=>{let c='c-etc';if(p.startsWith('쿠'))c='c-rok';else if(p.startsWith('직'))c='c-dir';else if(p.startsWith('자사'))c='c-self';else if(p.startsWith('에이블'))c='c-ably';else if(p.startsWith('스마트'))c='c-smart';else if(p.startsWith('무신사'))c='c-musinsa';return `<span class="chip ${c}">${p}</span>`;}).join(' ');}
+function chipHtml(s){return String(s||'').split('·').map(p=>{let c='c-etc';if(p.startsWith('쿠')||p.startsWith('로켓'))c='c-rok';else if(p.startsWith('직'))c='c-dir';else if(p.startsWith('자사'))c='c-self';else if(p.startsWith('에이블'))c='c-ably';else if(p.startsWith('스마트'))c='c-smart';else if(p.startsWith('무신사'))c='c-musinsa';return `<span class="chip ${c}">${p}</span>`;}).join(' ');}
 function tbl(el,cols,rows){
   let h='<thead><tr>'+cols.map(c=>`<th class="${c.r?'r':''}">${c.t}</th>`).join('')+'</tr></thead><tbody>';
   rows.forEach(r=>{h+='<tr>'+cols.map(c=>{if(c.html)return c.html(r);let v=r[c.k];if(c.chip)return `<td>${chipHtml(v)}</td>`;if(c.r&&typeof v==='number')v=(v||0).toLocaleString();return `<td class="${c.r?'r':(c.name?'name':'')}">${v??''}</td>`;}).join('')+'</tr>';});
@@ -224,7 +224,7 @@ const DROPPED=['96466','92901','99253','95712','105328','93325'];
 const PRICE_MC={'96466':12900,'98679':28000,'47064':31000,'45612':27000,'94228':19000,'92901':19000,'99253':8900,'95712':10900,'86117':15000,'94238':12000,'105328':32000,'56005':28000,'48143':29000,'24710':10900,'92014':14900,'21126':25000,'105024':112000,'93325':8000,'94218':12000,'99893':30000};
 const S60_MCP={'96466':410,'98679':0,'47064':2,'45612':0,'94228':12,'92901':0,'99253':40,'95712':4,'86117':0,'94238':12,'105328':88,'56005':0,'48143':7,'24710':118,'92014':0,'21126':1,'105024':3,'93325':3,'94218':7,'99893':37};
 const STOCK_MCP={'96466':6532,'98679':3878,'47064':2367,'45612':2040,'94228':2510,'92901':1261,'99253':3701,'95712':2248,'86117':2478,'94238':2464,'105328':519,'56005':845,'48143':710,'24710':1272,'92014':967,'21126':1053,'105024':91,'93325':2569,'94218':1764,'99893':715};
-const CHAN_MCP={'96466':'자사63·무신사12·쿠팡9·에이블리8·스마트스토어5·기타2','98679':'스마트스토어38·자사29·쿠팡16·에이블리6·올리브영4·기타7','47064':'자사75·에이블리19·스마트스토어6','45612':'에이블리36·자사34·스마트스토어27·쿠팡3','94228':'자사59·무신사14·에이블리10·스마트스토어7·쿠팡7·기타3','92901':'무신사53·자사32·에이블리8·29CM3·스마트스토어3·기타1','99253':'자사67·에이블리26·무신사3·스마트스토어2·29CM2','95712':'스마트스토어47·자사39·에이블리5·29CM4·무신사3·기타3','86117':'자사36·무신사26·에이블리18·29CM12·스마트스토어4·기타4','94238':'자사68·쿠팡15·29CM6·무신사6·스마트스토어3·기타2','105328':'자사63·무신사23·W컨셉7·에이블리4·기타2','56005':'쿠팡54·스마트스토어24·자사16·에이블리5','48143':'자사38·에이블리38·스마트스토어24','24710':'에이블리77·자사11·쿠팡10·스마트스토어2','92014':'스마트스토어100','21126':'자사64·스마트스토어20·에이블리9·쿠팡6·카카오1','105024':'W컨셉40·기타40·스마트스토어20','93325':'자사89·에이블리8·스마트스토어2','94218':'자사61·쿠팡27·29CM6·무신사6','99893':'에이블리54·자사41·무신사3·29CM1·기타1'};
+const CHAN_MCP={'96466':'자사63·스마트스토어8·로켓8·에이블리7·무신사7·기타8','98679':'자사43·직진12·기타26·로켓11·에이블리8','47064':'직진52·자사35·에이블리4·로켓4·기타4','45612':'자사63·직진17·에이블리12·기타7·스마트스토어2','94228':'자사57·직진30·에이블리5·스마트스토어3·기타6','92901':'자사77·직진8·무신사6·기타7·에이블리1','99253':'자사57·에이블리36·무신사3·29CM2·스마트스토어1·기타1','95712':'자사88·직진3·로켓3·에이블리1·스마트스토어1·기타4','86117':'자사75·스마트스토어9·기타10·무신사4·로켓3','94238':'자사79·기타9·에이블리4·스마트스토어4·로켓3','105328':'자사58·무신사17·기타17·에이블리5·29CM4','56005':'자사56·직진26·에이블리6·로켓6·기타6','48143':'자사59·직진20·로켓9·에이블리5·기타8','24710':'자사41·에이블리32·기타18·로켓7·스마트스토어2','92014':'자사65·에이블리21·로켓6·스마트스토어4·기타4','21126':'자사49·스마트스토어20·기타14·직진9·로켓7','105024':'기타54·자사26·W컨셉10·스마트스토어8·29CM3','93325':'자사79·기타8·에이블리6·로켓5·스마트스토어2','94218':'자사81·기타8·에이블리4·로켓4·스마트스토어3','99893':'직진77·자사19·에이블리2·기타1'};
 function cmCalc(price,cost){price=+price;cost=+cost;if(!price)return null;const ship=price>=50000?1681:1000;return Math.round(price/1.1-cost-price*0.35-200-ship);}
 function renderDisc(){
   const NAME_FIX={'94218':'풀샷 에어 홀가먼트 삼각 팬티 (FREE)','94238':'풀샷 에어 홀가먼트 삼각 팬티 (XL)'};
