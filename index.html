@@ -192,9 +192,9 @@ function renderChan(){
   const el=$('#chan-alloc'); if(!el)return;
   const parse=s=>String(s||'').split('·').map(t=>{const m=String(t).trim().match(/^(.+?)(\d+)$/);return m?{ch:m[1].trim(),pct:+m[2]}:null;}).filter(Boolean).filter(x=>!x.ch.includes('수동발주'));
   const groups={};
-  STORE.disc.forEach(r=>{const ch=parse(r.channel);if(!ch.length)return;ch.sort((a,b)=>b.pct-a.pct);const ext=ch.filter(c=>!c.ch.includes('자사')).slice(0,1);ext.forEach(c=>{(groups[c.ch]=groups[c.ch]||[]).push({name:r.name,pct:c.pct,rank:r.rank});});});
+  STORE.disc.forEach(r=>{const ch=parse(r.channel);if(!ch.length)return;ch.sort((a,b)=>b.pct-a.pct);let ext=ch.filter(c=>!c.ch.includes('자사')&&c.pct>=5);if(!ext.length){const t=ch.find(c=>!c.ch.includes('자사'));if(t)ext=[t];}ext.forEach(c=>{(groups[c.ch]=groups[c.ch]||[]).push({name:r.name,pct:c.pct,rank:r.rank});});});
   const order=Object.keys(groups).sort((a,b)=>groups[b].length-groups[a].length||a.localeCompare(b));
-  const intro='<p class="note" style="margin-bottom:10px">자사몰은 전 품목(20종) 공통 베이스 채널이라 제외하고, <b>자사 외 가장 강한 채널(주력 1순위)</b> 기준으로 품목을 배치했습니다.</p>';
+  const intro='<p class="note" style="margin-bottom:10px">자사몰은 전 품목 공통 베이스라 제외. 각 품목을 <b>비중 5% 이상인 외부 채널 모두</b>에 표시합니다(한 품목이 여러 채널에 나올 수 있음) — 채널 담당자별로 밀 후보를 보기 위함.</p>';
   const cls=c=>(c.includes('쿠팡')||c.includes('로켓'))?'c-rok':(c.includes('자사')?'c-self':(c.includes('직진')?'c-dir':(c.includes('에이블')?'c-ably':(c.includes('스마트')?'c-smart':(c.includes('무신사')?'c-musinsa':'c-etc')))));
   el.innerHTML=intro+order.map(ch=>{
     const items=groups[ch].sort((a,b)=>(b.pct-a.pct));
