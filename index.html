@@ -131,7 +131,7 @@
       <p class="note" style="margin-bottom:12px">각 제품을 최근 30일 판매 비중이 가장 높은 채널에 배정. 그 채널을 우선 공략·할인 노출하면 소진 효율이 높음.</p>
       <div id="chan-alloc"></div>
       <h2>지난주 액션 효과 — 자사몰 주간 소진 (FINAL SALE 적용 채널)</h2>
-      <p class="note" style="margin-bottom:10px">1차 인하 품목의 자사몰 주간 주문량(해당 단품 SKU 기준, 묶음·신상 콜라보 제외). W4=지난주(6/15~21) 확정치(6/22 갱신). 직전최고(W1~W3) 대비 1.2배↑=가속·0.85배↓=둔화. W4 차르르만 소폭 가속(10), 나머지 5종(백리스·네모팬티·로우라이즈·끈나시·worklove) 둔화 → 가격 2단계(공헌이익 0원) 검토.</p>
+      <p class="note" style="margin-bottom:10px">1차 인하 품목의 자사몰 주간 주문량(해당 단품 SKU 기준, 묶음·신상 콜라보 제외). W4=지난주(6/15~21) 확정치(6/22 갱신). 직전주(W3) 대비 1.2배↑=가속·0.85배↓=둔화. W4 차르르 가속(반등), 백리스 보합, 로우라이즈·네모팬티·끈나시·worklove 둔화 → 둔화 4종 가격 2단계(공헌이익 0원) 검토.</p>
       <div id="chan-fx"></div>
       <h2>가격 정책 — 공헌이익 3단계 사다리</h2>
       <div class="card"><div class="insight">
@@ -184,15 +184,15 @@ const ACTION_FX=[["풀샷브라 볼륨업 백리스",132,123,75,86],["차르르 
 function renderFx(){
   const el=$('#chan-fx'); if(!el)return;
   const judge=(prev,last)=>{const b=prev||0;const r=b?last/b:0;if(r>=1.2)return['가속','background:#e3f6e9;color:#1f7a3d'];if(r<=0.85)return['둔화','background:#ffe8e6;color:#c0392b'];return['변화없음','background:#fff3d6;color:#a36a00'];};
-  el.innerHTML='<div class="tablewrap"><table><thead><tr><th>상품</th><th class="r">W1 (5/25~31)</th><th class="r">W2 (6/1~7)</th><th class="r">W3 (6/8~14)</th><th class="r">W4 지난주 (6/15~21)</th><th class="r">W4/직전최고</th><th>판정</th></tr></thead><tbody>'+
-    ACTION_FX.map(a=>{const n=a[0],w1=a[1],w2=a[2],w3=a[3],w4=a[4];const b=Math.max(w1,w2,w3);const j=judge(b,w4);const ratio=b?(w4/b).toFixed(1)+'x':'-';return `<tr><td class="name">${n}</td><td class="r">${w1}</td><td class="r">${w2}</td><td class="r">${w3}</td><td class="r" style="font-weight:700">${w4}</td><td class="r">${ratio}</td><td><span class="chip" style="${j[1]}">${j[0]}</span></td></tr>`;}).join('')+
+  el.innerHTML='<div class="tablewrap"><table><thead><tr><th>상품</th><th class="r">W1 (5/25~31)</th><th class="r">W2 (6/1~7)</th><th class="r">W3 (6/8~14)</th><th class="r">W4 지난주 (6/15~21)</th><th class="r">W4/직전주</th><th>판정</th></tr></thead><tbody>'+
+    ACTION_FX.map(a=>{const n=a[0],w1=a[1],w2=a[2],w3=a[3],w4=a[4];const b=w3;const j=judge(b,w4);const ratio=b?(w4/b).toFixed(1)+'x':'-';return `<tr><td class="name">${n}</td><td class="r">${w1}</td><td class="r">${w2}</td><td class="r">${w3}</td><td class="r" style="font-weight:700">${w4}</td><td class="r">${ratio}</td><td><span class="chip" style="${j[1]}">${j[0]}</span></td></tr>`;}).join('')+
     '</tbody></table></div>';
 }
 function renderChan(){
   const el=$('#chan-alloc'); if(!el)return;
   const parse=s=>String(s||'').split('·').map(t=>{const m=String(t).trim().match(/^(.+?)(\d+)$/);return m?{ch:m[1].trim(),pct:+m[2]}:null;}).filter(Boolean).filter(x=>!x.ch.includes('수동발주'));
   const groups={};
-  STORE.disc.forEach(r=>{const ch=parse(r.channel);if(!ch.length)return;ch.sort((a,b)=>b.pct-a.pct);const top=ch[0];(groups[top.ch]=groups[top.ch]||[]).push({name:r.name,pct:top.pct,rank:r.rank});});
+  STORE.disc.forEach(r=>{const ch=parse(r.channel);if(!ch.length)return;ch.sort((a,b)=>b.pct-a.pct);let sel=ch.filter(c=>c.pct>=25);if(!sel.length)sel=[ch[0]];sel.forEach(c=>{(groups[c.ch]=groups[c.ch]||[]).push({name:r.name,pct:c.pct,rank:r.rank});});});
   const order=Object.keys(groups).sort((a,b)=>groups[b].length-groups[a].length||a.localeCompare(b));
   const cls=c=>(c.includes('쿠팡')||c.includes('로켓'))?'c-rok':(c.includes('자사')?'c-self':(c.includes('직진')?'c-dir':(c.includes('에이블')?'c-ably':(c.includes('스마트')?'c-smart':(c.includes('무신사')?'c-musinsa':'c-etc')))));
   el.innerHTML=order.map(ch=>{
@@ -224,7 +224,7 @@ const DROPPED=['96466','92901','99253','95712','105328','93325'];
 const PRICE_MC={'96466':12900,'98679':28000,'47064':31000,'45612':27000,'94228':19000,'92901':19000,'99253':8900,'95712':10900,'86117':15000,'94238':12000,'105328':32000,'56005':28000,'48143':29000,'24710':10900,'92014':14900,'21126':25000,'105024':112000,'93325':8000,'94218':12000,'99893':30000};
 const S60_MCP={'96466':410,'98679':0,'47064':2,'45612':0,'94228':12,'92901':0,'99253':40,'95712':4,'86117':0,'94238':12,'105328':88,'56005':0,'48143':7,'24710':118,'92014':0,'21126':1,'105024':3,'93325':3,'94218':7,'99893':37};
 const STOCK_MCP={'96466':6532,'98679':3878,'47064':2367,'45612':2040,'94228':2510,'92901':1261,'99253':3701,'95712':2248,'86117':2478,'94238':2464,'105328':519,'56005':845,'48143':710,'24710':1272,'92014':967,'21126':1053,'105024':91,'93325':2569,'94218':1764,'99893':715};
-const CHAN_MCP={'96466':'자사63·스마트스토어8·로켓8·에이블리7·무신사7·기타8','98679':'자사43·직진12·기타26·로켓11·에이블리8','47064':'직진52·자사35·에이블리4·로켓4·기타4','45612':'자사63·직진17·에이블리12·기타7·스마트스토어2','94228':'자사57·직진30·에이블리5·스마트스토어3·기타6','92901':'자사77·직진8·무신사6·기타7·에이블리1','99253':'자사57·에이블리36·무신사3·29CM2·스마트스토어1·기타1','95712':'자사88·직진3·로켓3·에이블리1·스마트스토어1·기타4','86117':'자사75·스마트스토어9·기타10·무신사4·로켓3','94238':'자사79·기타9·에이블리4·스마트스토어4·로켓3','105328':'자사58·무신사17·기타17·에이블리5·29CM4','56005':'자사56·직진26·에이블리6·로켓6·기타6','48143':'자사59·직진20·로켓9·에이블리5·기타8','24710':'자사41·에이블리32·기타18·로켓7·스마트스토어2','92014':'자사65·에이블리21·로켓6·스마트스토어4·기타4','21126':'자사49·스마트스토어20·기타14·직진9·로켓7','105024':'기타54·자사26·W컨셉10·스마트스토어8·29CM3','93325':'자사79·기타8·에이블리6·로켓5·스마트스토어2','94218':'자사81·기타8·에이블리4·로켓4·스마트스토어3','99893':'직진77·자사19·에이블리2·기타1'};
+const CHAN_MCP={'96466':'자사65·스마트스토어8·로켓8·에이블리7·무신사7·기타5','98679':'자사46·직진13·로켓12·에이블리9·스마트스토어9·기타12','47064':'직진52·자사35·에이블리4·로켓4·기타4','45612':'자사63·직진17·에이블리12·기타7·스마트스토어2','94228':'자사57·직진30·에이블리5·스마트스토어3·기타6','92901':'자사78·직진8·무신사6·로켓2·에이블리1·기타4','99253':'자사58·에이블리36·무신사3·29CM2·스마트스토어1','95712':'자사89·직진3·로켓3·에이블리1·스마트스토어1·기타3','86117':'자사79·스마트스토어10·무신사4·로켓3·기타5','94238':'자사80·기타9·에이블리4·스마트스토어4·로켓3','105328':'자사64·무신사19·에이블리6·W컨셉5·29CM4·기타3','56005':'자사56·직진26·에이블리6·로켓6·기타6','48143':'자사59·직진20·로켓9·에이블리5·기타7','24710':'자사41·에이블리32·기타18·로켓7·스마트스토어2','92014':'자사65·에이블리21·로켓6·스마트스토어4·기타4','21126':'자사49·스마트스토어20·기타14·직진9·로켓7','105024':'자사56·W컨셉22·스마트스토어17·29CM6','93325':'자사84·에이블리6·로켓5·스마트스토어2·기타2','94218':'자사82·기타7·에이블리4·로켓4·스마트스토어3','99893':'직진77·자사19·에이블리2·기타1'};
 function cmCalc(price,cost){price=+price;cost=+cost;if(!price)return null;const ship=price>=50000?1681:1000;return Math.round(price/1.1-cost-price*0.35-200-ship);}
 function renderDisc(){
   const NAME_FIX={'94218':'풀샷 에어 홀가먼트 삼각 팬티 (FREE)','94238':'풀샷 에어 홀가먼트 삼각 팬티 (XL)'};
