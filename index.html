@@ -82,9 +82,9 @@
       <button class="on" data-t="sum">요약</button>
       <button data-t="disc">할인 TOP20</button>
       <button data-t="gift">사은품</button>
-      <button data-t="bait">미끼특가</button>
+      <button data-t="bait">특가</button>
       <button data-t="scrap">폐기</button>
-      <button data-t="review">폐기 검토 대상</button>
+      <button data-t="review">특가 검토</button>
       <button data-t="chan">채널별 분배</button>
     </nav>
 
@@ -99,10 +99,10 @@
     </section>
 
     <section class="tab" id="bait">
-      <h2>미끼특가 — 사은품 부적합 세트류 (원가 차등 990~4,900)</h2>
+      <h2>특가 — 사은품 부적합 세트류 (원가 차등 1,900~4,900)</h2>
       <div class="toolbar"><span class="cnt" id="bait-cnt"></span><button class="dl" onclick="dl('bait')">⬇ CSV</button></div>
       <div class="tablewrap"><table id="bait-t"></table></div>
-      <p class="note">사은품으로 주기엔 단가가 높은 세트·브라렛·이벤트웨어를 <b>미끼특가</b>로 소진(나리 책임 피드백). 원가별 차등(원가 5천대 1,900 / 6천대 2,900 / 8천대 4,900). 개당 공헌이익은 적자지만 종료 세트 미끼·트래픽 유입용 — 990 단일 대비 회수매출(B)이 커집니다.</p>
+      <p class="note">사은품으로 주기엔 단가가 높은 세트·브라렛·이벤트웨어를 <b>특가</b>로 소진(나리 책임 피드백). 원가별 차등(원가 5천대 1,900 / 6천대 2,900 / 8천대 4,900). 개당 공헌이익은 적자지만 종료 세트 트래픽 유입용 — 990 단일 대비 회수매출(B)이 커집니다.</p>
     </section>
 
     <section class="tab" id="disc">
@@ -117,7 +117,7 @@
       <h2>사은품 후보 — 적합·보통 품목 (고단가 5종은 할인 전환·제외)</h2>
       <div class="toolbar"><span class="cnt" id="gift-cnt"></span><button class="dl" onclick="dl('gift')">⬇ CSV</button></div>
       <div class="tablewrap"><table id="gift-t"></table></div>
-      <p class="note">사은품 = 저가 단품·팬티·부자재 위주(연장후크·패드·스타킹·티팬티·타투스티커·베일/캔디팝/CH/개미허리/프리컷 심리스 팬티 등). <b>세트·브라렛·이벤트웨어 키트류는 사은품 부적합 → 990원 미끼특가로 전환(별도)</b>: 프리컷 브라렛 세트(라운드넥·브이넥)·릴렉싱 브라렛 세트·[츠메르]영혼브라 세트·시크릿글램 세트·리본산타/벨벳바니/애쉬벨벳바니/시크릿메이드 이벤트웨어.</p>
+      <p class="note">사은품 = 저가 단품·팬티·부자재 위주(연장후크·패드·스타킹·티팬티·타투스티커·베일/캔디팝/CH/개미허리/프리컷 심리스 팬티 등). <b>세트·브라렛·이벤트웨어 키트류는 사은품 부적합 → 특가로 전환(별도)</b>: 프리컷 브라렛 세트(라운드넥·브이넥)·릴렉싱 브라렛 세트·[츠메르]영혼브라 세트·시크릿글램 세트·리본산타/벨벳바니/애쉬벨벳바니/시크릿메이드 이벤트웨어.</p>
     </section>
 
     <section class="tab" id="scrap">
@@ -128,8 +128,8 @@
     </section>
 
     <section class="tab" id="review">
-      <h2>폐기 검토 대상 — 2023.7 이후 등록 (최근 신상)</h2>
-      <p class="note" style="margin-bottom:10px">등록일 기준 폐기에서 분리. 베니벨·라인핏·베이직 코튼 삼각팬티 등 최근 출시 → 폐기 보류·소진 관찰.</p>
+      <h2>특가 검토 — 2023.7 이후 등록 (최근 신상)</h2>
+      <p class="note" style="margin-bottom:10px">최근 출시라 폐기 부적합 → <b>폐기 대신 특가로 소진 시도</b>. 베니벨·라인핏·베이직 코튼 삼각팬티 등. 특가 노출 후 미반응 시 재검토.</p>
       <div class="toolbar"><span class="cnt" id="review-cnt"></span><button class="dl" onclick="dl('review')">⬇ CSV</button></div>
       <div class="tablewrap"><table id="review-t"></table></div>
     </section>
@@ -267,7 +267,7 @@ function renderBait(){
   const el=$('#bait-t'); if(!el)return;
   const rows=BAIT_LIST.map(r=>({...r,cm:cmCalc(r.price,r.cost)}));
   const cmCell=r=>{const v=r.cm||0;return `<td class="r" style="font-weight:600;color:#c0392b">${v.toLocaleString()}</td>`;};
-  tbl(el,[{t:'상품명',k:'name',name:1},{t:'현재고',k:'qty',r:1},{t:'원가',k:'cost',r:1},{t:'미끼특가',k:'price',r:1},{t:'공헌이익/개',html:cmCell},{t:'회수매출(만)',k:'recover',r:1},{t:'자산(만)',k:'asset',r:1}],rows);
+  tbl(el,[{t:'상품명',k:'name',name:1},{t:'현재고',k:'qty',r:1},{t:'원가',k:'cost',r:1},{t:'특가',k:'price',r:1},{t:'공헌이익/개',html:cmCell},{t:'회수매출(만)',k:'recover',r:1},{t:'자산(만)',k:'asset',r:1}],rows);
   const tq=rows.reduce((s,r)=>s+r.qty,0),tr=rows.reduce((s,r)=>s+r.recover,0),ta=rows.reduce((s,r)=>s+r.asset,0);
   const tb=el.querySelector('tbody'); if(tb)tb.insertAdjacentHTML('beforeend',`<tr style="background:#fce4d6;font-weight:700"><td class="name">합계</td><td class="r">${tq.toLocaleString()}</td><td></td><td></td><td></td><td class="r">${tr}만</td><td class="r">${ta}만</td></tr>`);
   const c=$('#bait-cnt'); if(c)c.textContent=`${rows.length}종 · 재고 ${tq.toLocaleString()}개 · 회수매출 약 ${tr}만 · 자산 ${ta}만`;
