@@ -99,7 +99,7 @@
     </section>
 
     <section class="tab" id="bait">
-      <h2>특가 — 사은품 부적합 세트류 · 옵션(SKU) 단위 (원가 차등 1,900~4,900)</h2>
+      <h2>특가 — 사은품 부적합 (세트류 옵션단위 + 사이즈 다수 팬티류 상품명단위)</h2>
       <div class="toolbar"><span class="cnt" id="bait-cnt"></span><button class="dl" onclick="dl('bait')">⬇ CSV</button></div>
       <div class="tablewrap"><table id="bait-t"></table></div>
       <p class="note">사은품으로 주기엔 단가가 높은 세트·브라렛·이벤트웨어를 <b>특가</b>로 소진(나리 책임 피드백). <b>옵션(SKU) 단위 · 상품코드·옵션명 포함</b>. 원가별 차등(원가 5천대 1,900 / 6천대 2,900 / 7천대+ 4,900). 개당 공헌이익은 적자지만 종료 세트 트래픽 유입용.</p>
@@ -117,7 +117,7 @@
       <h2>사은품 후보 — 적합·보통 품목 (고단가 5종은 할인 전환·제외)</h2>
       <div class="toolbar"><span class="cnt" id="gift-cnt"></span><button class="dl" onclick="dl('gift')">⬇ CSV</button></div>
       <div class="tablewrap"><table id="gift-t"></table></div>
-      <p class="note">사은품 = 저가 단품·팬티·부자재 위주(연장후크·패드·스타킹·티팬티·타투스티커·베일/캔디팝/CH/개미허리/프리컷 심리스 팬티 등). <b>세트·브라렛·이벤트웨어 키트류는 사은품 부적합 → 특가로 전환(별도)</b>: 프리컷 브라렛 세트(라운드넥·브이넥)·릴렉싱 브라렛 세트·[츠메르]영혼브라 세트·시크릿글램 세트·리본산타/벨벳바니/애쉬벨벳바니/시크릿메이드 이벤트웨어.</p>
+      <p class="note">사은품 = 저가 단품·부자재 위주, <b>사이즈 선택 부담 없는 것</b>(연장후크·패드·스타킹·티팬티·타투스티커·캔디팝 등). <b>① 세트·브라렛·이벤트웨어 키트류</b>(프리컷 브라렛 세트·릴렉싱·영혼브라·시크릿글램·리본산타/벨벳바니/애쉬벨벳바니/시크릿메이드)와 <b>② 사이즈 다수 팬티류</b>(프리컷 심리스 팬티·베일에가려진 팬티·개미허리 비키니팬티·CH 팬티)는 사은품 부적합 → <b>특가로 전환</b>.</p>
     </section>
 
     <section class="tab" id="scrap">
@@ -255,7 +255,8 @@ function renderGift(){
   const GIFT_ADD=[{code:'01124',name:'연장후크 3단',qty:8507,unit:81,asset:69,fit:'적합(초저가)'},{code:'05117',name:'투컵업 추가패드',qty:2422,unit:823,asset:199,fit:'적합(저가)'},{code:'S베일',name:'베일에가려진 팬티',qty:462,unit:1934,asset:89,fit:'적합(저가 대량)'},{code:'S캔디',name:'캔디팝 팬티',qty:246,unit:1556,asset:38,fit:'적합(초저가 대량)'},{code:'S프리R',name:'프리컷 심리스 브라렛 세트(라운드넥)',qty:137,unit:4964,asset:68,fit:'보통'},{code:'S릴렉싱',name:'릴렉싱 브라렛 세트',qty:138,unit:5847,asset:81,fit:'보통(세트·단가↑)'},{code:'S프리',name:'프리컷 심리스 브라렛 세트(브이넥)',qty:118,unit:5216,asset:62,fit:'보통(세트·단가↑)'},{code:'SCH',name:'CH 팬티',qty:10,unit:1934,asset:2,fit:'적합(초저가)'},{code:'S데미안',name:'데미안 소망 스타킹',qty:370,unit:1429,asset:53,fit:'적합(저가)'},{code:'S개미',name:'개미허리 비키니팬티 (1P)',qty:221,unit:4964,asset:110,fit:'보통(단가↑)'},{code:'S쫀쫀',name:'사은품 쫀쫀 심리스 팬티',qty:9,unit:0,asset:0,fit:'적합(사은품 전용)'}];
   const ADDN=GIFT_ADD.map(x=>x.name);
   const BAIT=/세트|브라렛|이벤트웨어|글램/;
-  const rows=STORE.gift.filter(r=>!String(r.fit||'').includes('고단가')&&!String(r.name||'').includes('밀착 노와이어')&&!ADDN.includes(String(r.name||''))).concat(GIFT_ADD).filter(r=>!BAIT.test(String(r.name||''))).sort((a,b)=>{const o=f=>String(f||'').startsWith('적합')?0:(String(f||'').startsWith('보통')?1:2);return o(a.fit)-o(b.fit)||(+b.asset||0)-(+a.asset||0);});
+  const MOVED=/프리컷 심리스 팬티|개미허리 비키니팬티|베일에가려진 팬티|CH 팬티/;
+  const rows=STORE.gift.filter(r=>!String(r.fit||'').includes('고단가')&&!String(r.name||'').includes('밀착 노와이어')&&!ADDN.includes(String(r.name||''))).concat(GIFT_ADD).filter(r=>!BAIT.test(String(r.name||''))&&!MOVED.test(String(r.name||''))).sort((a,b)=>{const o=f=>String(f||'').startsWith('적합')?0:(String(f||'').startsWith('보통')?1:2);return o(a.fit)-o(b.fit)||(+b.asset||0)-(+a.asset||0);});
   const fitCell=r=>{const f=String(r.fit||'');const c=f.startsWith('적합')?'background:#e3f6e9;color:#1f7a3d':(f.startsWith('보통')?'background:#fff3d6;color:#a36a00':'background:#ffe8e6;color:#c0392b');return `<td><span class="chip" style="${c}">${f}</span></td>`;};
   tbl($('#gift-t'),[{t:'상품명',k:'name',name:1},{t:'수량',k:'qty',r:1},{t:'자산(만원)',k:'asset',r:1},{t:'적합도',html:fitCell}],rows);
   const tot=rows.reduce((s,r)=>s+(+r.asset||0),0),totq=rows.reduce((s,r)=>s+(+r.qty||0),0);
@@ -381,15 +382,22 @@ const BAIT_SKU=[
 {n:"프리컷 심리스 브라렛 세트(브이넥)",o:"[블랙-S(70)-S(85-90)]",c:"S98398",q:5,k:5216},
 {n:"프리컷 심리스 브라렛 세트(브이넥)",o:"[베이지-L(80)-L(95-100)]",c:"S98412",q:3,k:5216}
 ];
+// 사은품 부적합(사이즈 다수) 팬티류 → 특가 (상품명 단위 집계)
+const BAIT_ADD=[
+{n:"프리컷 심리스 팬티",o:"전 사이즈·색상 (16옵션)",c:"대표 98414",q:398,k:1732},
+{n:"베일에가려진 팬티",o:"전 사이즈·색상 (4옵션)",c:"대표 08702",q:462,k:1934},
+{n:"개미허리 비키니팬티 (1P)",o:"전 사이즈·색상 (6옵션)",c:"대표 28908",q:221,k:4964},
+{n:"CH 팬티",o:"전 사이즈 (2옵션)",c:"대표 05938",q:10,k:1934}
+];
 function baitPrice(k){return k<5500?1900:(k<7000?2900:4900);}
 function renderBait(){
   const el=$('#bait-t'); if(!el)return;
-  const rows=BAIT_SKU.map(r=>{const price=baitPrice(r.k);return {name:r.n,opt:r.o,code:r.c,qty:r.q,cost:r.k,price,cm:cmCalc(price,r.k),asset:Math.round(r.q*r.k/10000)};}).sort((a,b)=>a.name.localeCompare(b.name,'ko')||b.qty-a.qty);
+  const rows=BAIT_SKU.concat(BAIT_ADD).map(r=>{const price=baitPrice(r.k);return {name:r.n,opt:r.o,code:r.c,qty:r.q,cost:r.k,price,cm:cmCalc(price,r.k),asset:Math.round(r.q*r.k/10000)};}).sort((a,b)=>a.name.localeCompare(b.name,'ko')||b.qty-a.qty);
   const cmCell=r=>`<td class="r" style="font-weight:600;color:#c0392b">${(r.cm||0).toLocaleString()}</td>`;
   tbl(el,[{t:'상품명',k:'name',name:1},{t:'옵션',k:'opt'},{t:'상품코드',k:'code'},{t:'현재고',k:'qty',r:1},{t:'원가',k:'cost',r:1},{t:'특가',k:'price',r:1},{t:'공헌이익/개',html:cmCell}],rows);
   const tq=rows.reduce((s,r)=>s+r.qty,0),ta=rows.reduce((s,r)=>s+r.qty*r.cost,0),tr=rows.reduce((s,r)=>s+r.qty*r.price,0);
-  const tb=el.querySelector('tbody'); if(tb)tb.insertAdjacentHTML('beforeend',`<tr style="background:#fce4d6;font-weight:700"><td class="name">합계 (${rows.length} SKU)</td><td></td><td></td><td class="r">${tq.toLocaleString()}</td><td></td><td></td><td class="r">자산 ${Math.round(ta/10000).toLocaleString()}만</td></tr>`);
-  const c=$('#bait-cnt'); if(c)c.textContent=`${rows.length} SKU · 재고 ${tq.toLocaleString()}개 · 자산 ${Math.round(ta/10000).toLocaleString()}만 · 회수매출 약 ${Math.round(tr/10000).toLocaleString()}만`;
+  const tb=el.querySelector('tbody'); if(tb)tb.insertAdjacentHTML('beforeend',`<tr style="background:#fce4d6;font-weight:700"><td class="name">합계 (${rows.length}행)</td><td></td><td></td><td class="r">${tq.toLocaleString()}</td><td></td><td></td><td class="r">자산 ${Math.round(ta/10000).toLocaleString()}만</td></tr>`);
+  const c=$('#bait-cnt'); if(c)c.textContent=`세트 SKU + 팬티 4종 · 재고 ${tq.toLocaleString()}개 · 자산 ${Math.round(ta/10000).toLocaleString()}만 · 회수매출 약 ${Math.round(tr/10000).toLocaleString()}만`;
   STORE.bait=rows;
 }
 const ORG_FB=8719; // cafe24 미주문 품목 추정단가
