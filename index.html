@@ -102,7 +102,7 @@
       <h2>특가 — 사은품 부적합 세트·이벤트웨어 키트류 (제품 단위 · 원가 차등 1,900~4,900)</h2>
       <div class="toolbar"><span class="cnt" id="bait-cnt"></span><button class="dl" onclick="dl('bait')">⬇ CSV</button></div>
       <div class="tablewrap"><table id="bait-t"></table></div>
-      <p class="note">진행종료(제품 단위 종료)된 세트·브라렛·이벤트웨어 키트류를 <b>특가</b>로 소진(나리 책임 피드백). <b>제품 단위 집계</b>(옵션수·총재고). 원가별 차등(원가 5천대 1,900 / 6천대 2,900 / 7천대+ 4,900). 개당 공헌이익은 적자지만 종료 제품 트래픽 유입용. 옵션별 상세는 CSV 참고.</p>
+      <p class="note">세트·브라렛·이벤트웨어 키트류 — 모두 <b>상품 전체 종료</b>(옵션='전체 종료', 제품 단위 집계)라 특가로 소진(나리 책임 피드백). 원가별 차등(원가 5천대 1,900 / 6천대 2,900 / 7천대+ 4,900). 개당 공헌이익은 적자지만 종료 제품 트래픽 유입용. 옵션별 상세는 CSV 참고.</p>
     </section>
 
     <section class="tab" id="disc">
@@ -128,8 +128,8 @@
     </section>
 
     <section class="tab" id="review">
-      <h2>특가 검토 — 2023.7 이후 등록 (최근 신상)</h2>
-      <p class="note" style="margin-bottom:10px">최근 출시라 폐기 부적합 → <b>폐기 대신 특가로 소진 시도</b>. 베니벨·라인핏·베이직 코튼 삼각팬티 등. 특가 노출 후 미반응 시 재검토.</p>
+      <h2>특가 검토 — 2023.7+ 등록 상품의 종료/꼬다리 옵션</h2>
+      <p class="note" style="margin-bottom:10px">최근 출시라 폐기 부적합 → <b>특가로 소진 시도</b>. 폐기와 동일 구조: <b>상품 전체 종료</b>는 상품 단위로 상단에, <b>일부 옵션만 종료(활성 상품의 꼬다리)</b>는 상품별로 묶어 옵션명 표시(베이직 코튼 삼각팬티·라인핏·슬리피펀칭·풀샷브라·딥브이 모노키니). 재고1~5·판매0 기준. 미반응 시 폐기 전환.</p>
       <div class="toolbar"><span class="cnt" id="review-cnt"></span><button class="dl" onclick="dl('review')">⬇ CSV</button></div>
       <div class="tablewrap"><table id="review-t"></table></div>
     </section>
@@ -394,9 +394,9 @@ function renderBait(){
   // 제품(상품명) 단위 집계 — 진행종료는 제품 단위 종료
   const agg={};
   BAIT_SKU.forEach(r=>{if(!agg[r.n])agg[r.n]={name:r.n,qty:0,cost:r.k,opts:0};agg[r.n].qty+=r.q;agg[r.n].opts++;});
-  let rows=Object.values(agg).map(r=>{const price=baitPrice(r.cost);return {...r,price,cm:cmCalc(price,r.cost),recover:Math.round(r.qty*price/10000),asset:Math.round(r.qty*r.cost/10000)};}).sort((a,b)=>b.asset-a.asset);
+  let rows=Object.values(agg).map(r=>{const price=baitPrice(r.cost);return {...r,opt:'전체 종료',price,cm:cmCalc(price,r.cost),recover:Math.round(r.qty*price/10000),asset:Math.round(r.qty*r.cost/10000)};}).sort((a,b)=>b.asset-a.asset);
   const cmCell=r=>`<td class="r" style="font-weight:600;color:#c0392b">${(r.cm||0).toLocaleString()}</td>`;
-  tbl(el,[{t:'상품명',k:'name',name:1},{t:'옵션수',k:'opts',r:1},{t:'현재고',k:'qty',r:1},{t:'원가',k:'cost',r:1},{t:'특가',k:'price',r:1},{t:'공헌이익/개',html:cmCell},{t:'회수매출(만)',k:'recover',r:1},{t:'자산(만)',k:'asset',r:1}],rows);
+  tbl(el,[{t:'상품명',k:'name',name:1},{t:'옵션',k:'opt'},{t:'현재고',k:'qty',r:1},{t:'원가',k:'cost',r:1},{t:'특가',k:'price',r:1},{t:'공헌이익/개',html:cmCell},{t:'회수매출(만)',k:'recover',r:1},{t:'자산(만)',k:'asset',r:1}],rows);
   const tq=rows.reduce((s,r)=>s+r.qty,0),ta=rows.reduce((s,r)=>s+r.asset,0),tr=rows.reduce((s,r)=>s+r.recover,0);
   const tb=el.querySelector('tbody'); if(tb)tb.insertAdjacentHTML('beforeend',`<tr style="background:#fce4d6;font-weight:700"><td class="name">합계</td><td></td><td class="r">${tq.toLocaleString()}</td><td></td><td></td><td></td><td class="r">${tr.toLocaleString()}만</td><td class="r">${ta.toLocaleString()}만</td></tr>`);
   const c=$('#bait-cnt'); if(c)c.textContent=`${rows.length}종 · 재고 ${tq.toLocaleString()}개 · 자산 ${ta.toLocaleString()}만 · 회수매출 약 ${tr.toLocaleString()}만`;
@@ -444,6 +444,51 @@ const SCRAP_SKU=[
 {n:"랜덤_ 브라 단품",o:"[95 SIZE]",c:"S75845",q:1,k:0},
 {n:"랜덤_ 브라+팬티 세트",o:"[95 SIZE]",c:"S99754",q:2,k:0}
 ];
+// 특가 검토 — 2023.7+ 등록 상품의 꼬다리(재고1~5·판매0) 옵션 (실데이터)
+const REVIEW_SKU=[
+{n:"[3PACK] 베이직 코튼 삼각팬티",o:"[종료구성 라이트퍼플/라이트핑크/페일레몬-2XL(105-115)]",c:"S103249",q:5,k:4818},
+{n:"[3PACK] 베이직 코튼 삼각팬티",o:"[구성 4.라이트그레이3-3XL(115-120)]",c:"S105534",q:4,k:4818},
+{n:"[3PACK] 베이직 코튼 삼각팬티",o:"[종료구성 라이트핑크/페일레몬/뉴트럴베이지-S(85-90)]",c:"S103263",q:4,k:4818},
+{n:"[3PACK] 베이직 코튼 삼각팬티",o:"[종료구성 라이트퍼플/페일레몬/차콜-XL(100-105)]",c:"S103260",q:4,k:4818},
+{n:"[3PACK] 베이직 코튼 삼각팬티",o:"[종료구성 라이트퍼플/페일레몬/차콜-M(90-95)]",c:"S103258",q:4,k:4818},
+{n:"[3PACK] 베이직 코튼 삼각팬티",o:"[종료구성 라이트핑크/페일레몬/뉴트럴베이지-XL(100-105)]",c:"S103266",q:4,k:4818},
+{n:"[3PACK] 베이직 코튼 삼각팬티",o:"[구성 5.차콜3-3XL(115-120)]",c:"S105540",q:3,k:4818},
+{n:"[3PACK] 베이직 코튼 삼각팬티",o:"[종료구성 라이트퍼플/페일레몬/차콜-3XL(115-120)]",c:"S103262",q:3,k:4818},
+{n:"[3PACK] 베이직 코튼 삼각팬티",o:"[종료구성 라이트퍼플/페일레몬/차콜-2XL(105-115)]",c:"S103261",q:3,k:4818},
+{n:"[3PACK] 베이직 코튼 삼각팬티",o:"[종료구성 라이트퍼플/라이트핑크/뉴트럴베이지-S(85-90)]",c:"S103251",q:3,k:4818},
+{n:"[3PACK] 베이직 코튼 삼각팬티",o:"[종료구성 라이트퍼플/라이트핑크/페일레몬-S(85-90)]",c:"S103245",q:3,k:4818},
+{n:"[3PACK] 베이직 코튼 삼각팬티",o:"[구성 3.뉴트럴베이지3-3XL(115-120)]",c:"S105528",q:3,k:4818},
+{n:"[3PACK] 베이직 코튼 삼각팬티",o:"[종료구성 라이트핑크/페일레몬/뉴트럴베이지-3XL(115-120)]",c:"S103268",q:2,k:4818},
+{n:"[3PACK] 베이직 코튼 삼각팬티",o:"[종료구성 라이트퍼플/라이트핑크/페일레몬-3XL(115-120)]",c:"S103250",q:2,k:4818},
+{n:"[3PACK] 베이직 코튼 삼각팬티",o:"[종료구성 라이트퍼플/라이트핑크/페일레몬-XL(100-105)]",c:"S103248",q:2,k:4818},
+{n:"[3PACK] 베이직 코튼 삼각팬티",o:"[종료구성 라이트퍼플/라이트핑크/뉴트럴베이지-2XL(105-115)]",c:"S103255",q:2,k:4818},
+{n:"[3PACK] 베이직 코튼 삼각팬티",o:"[종료구성 라이트퍼플/라이트핑크/뉴트럴베이지-M(90-95)]",c:"S103252",q:2,k:4818},
+{n:"[3PACK] 베이직 코튼 삼각팬티",o:"[종료구성 라이트퍼플/라이트핑크/뉴트럴베이지-3XL(115-120)]",c:"S103256",q:1,k:4818},
+{n:"라인핏 부츠컷 레깅스",o:"[기모-블랙-S (short)]",c:"S108543",q:5,k:13000},
+{n:"라인핏 부츠컷 레깅스",o:"[기모-블랙-XS (short)]",c:"S108541",q:5,k:13000},
+{n:"라인핏 부츠컷 레깅스",o:"[기모-블랙-XXS (short)]",c:"S108595",q:3,k:13000},
+{n:"라인핏 부츠컷 레깅스",o:"[기모-미디엄그레이-XS (short)]",c:"S108549",q:3,k:13000},
+{n:"라인핏 부츠컷 레깅스",o:"[기모-미디엄그레이-S (basic)]",c:"S108550",q:2,k:13000},
+{n:"[5PACK] 베이직 코튼 삼각팬티",o:"[종료구성 라이트퍼플/라이트핑크/페일레몬/뉴트럴베이지/차콜-3XL(115-120)]",c:"S103324",q:3,k:8030},
+{n:"[5PACK] 베이직 코튼 삼각팬티",o:"[종료구성 라이트퍼플/라이트핑크/페일레몬/라이트그레이/화이트-3XL(115-120)]",c:"S103318",q:2,k:8030},
+{n:"[5PACK] 베이직 코튼 삼각팬티",o:"[종료구성 라이트퍼플/라이트핑크/페일레몬/라이트그레이/화이트-2XL(105-115)]",c:"S103317",q:1,k:8030},
+{n:"[5PACK] 베이직 코튼 삼각팬티",o:"[종료구성 라이트퍼플/라이트핑크/페일레몬/라이트그레이/화이트-L(95-100)]",c:"S103315",q:1,k:8030},
+{n:"[3종 구성] 슬리피 펀칭 파자마 세트",o:"★매칭금지★[핑크-FREE(44-66)]",c:"S98981",q:3,k:32000},
+{n:"[3종 구성] 슬리피 펀칭 파자마 세트",o:"★매칭금지★[화이트-FREE(44-66)]",c:"S98979",q:1,k:32000},
+{n:"풀샷브라 저중심 솔리드 노와이어 로고 ver",o:"[핑크베이지-85E]",c:"S100308",q:1,k:9288},
+{n:"딥브이 커버 니트 모노키니 (Short)",o:"[그린 파파야-S]",c:"S105765",q:3,k:12443},
+{n:"볼륨바이블2 퓨징 삼각팬티",o:"[베이지-FREE(87-95)]",c:"S97642",q:1,k:1934},
+{n:"볼륨바이블2 퓨징 삼각팬티",o:"[레드-FREE(87-95)]",c:"S97641",q:1,k:1934},
+{n:"[츠메르] 5cm 울트라푸쉬 심리스 브라 세트",o:"[핑크-85A-FREE]",c:"S96391",q:1,k:9003},
+{n:"[풀샷몰드] 모달 라운드 크롭 캡나시",o:"[터키블루-FREE(44-66)(AB컵)]",c:"S97166",q:1,k:15900},
+{n:"[풀샷몰드] 베이직 워머 캡내장 폴라티",o:"[레드-FREE(44-66)(C컵)]",c:"S97017",q:4,k:10000},
+{n:"[풀샷몰드] 부유방커버 베이직 캡나시",o:"[하와이안블루-FREE(44-66)(C컵)]",c:"S94742",q:1,k:15900},
+{n:"베니벨 파자마 가디건",o:"[ONE-FREE]",c:"S108702",q:2,k:6226},
+{n:"베니벨 파자마 반바지",o:"[ONE-FREE]",c:"S108663",q:1,k:4618},
+{n:"영혼브라 퓨징 삼각팬티",o:"[베이지(샌드베이지)-FREE(87-95)]",c:"S97627",q:1,k:1682},
+{n:"쫀득퓨징 삼각팬티",o:"[핑크-FREE(87-95)]",c:"S97623",q:2,k:1808}
+];
+const REVIEW_PARTIAL=/베이직 코튼 삼각팬티|라인핏 부츠컷 레깅스|슬리피 펀칭 파자마|저중심 솔리드 노와이어|딥브이 커버 니트 모노키니/;
 function renderScrap(){
   // 폐기: 상품 전체 종료 → 상품단위 / 일부 옵션만 종료(베이직 코튼 삼각팬티·프리컷 브라렛 세트) → 옵션단위
   // 일부 옵션만 종료(활성 구성과 혼재)인 상품 = 옵션 단위 유지. 그 외 = 상품 전체 종료
@@ -463,16 +508,22 @@ function renderScrap(){
     const sq=srows.reduce((s,r)=>s+r.qty,0),sa=srows.reduce((s,r)=>s+r.asset,0);
     const stb=sel.querySelector('tbody'); if(stb)stb.insertAdjacentHTML('beforeend',`<tr style="background:#fce4d6;font-weight:700"><td class="name">합계</td><td></td><td></td><td class="r">${sq.toLocaleString()}</td><td></td><td class="r">${sa.toLocaleString()}</td></tr>`);
     const sc=$('#scrap-cnt'); if(sc)sc.textContent=`${srows.length}건 · 수량 ${sq} · 자산 약 ${Math.round(sa/10000).toLocaleString()}만원`;}
-  // 특가 검토: 2023.7+ 등록 신상 — 제품(상품명) 단위 집계
-  const ragg={};
-  SCRAP.filter(r=>r[4]==='재검토').forEach(r=>{const n=r[1];if(!ragg[n])ragg[n]={name:n,opts:0,qty:0,reg:r[3]};ragg[n].opts++;ragg[n].qty+=r[2];});
-  const rev=Object.values(ragg).map(r=>({...r,asset:r.qty*(ORG[r.name]||ORG_FB)})).sort((a,b)=>b.asset-a.asset);
+  // 특가 검토: 활성 상품의 꼬다리 옵션(옵션별) → 옵션명 표시, 상품 전체 종료 → 상품단위. 폐기와 동일 구조
+  const rgrp={}; REVIEW_SKU.forEach(r=>{(rgrp[r.n]=rgrp[r.n]||[]).push(r);});
+  let rwhole=[], roptg=[];
+  Object.keys(rgrp).forEach(n=>{const arr=rgrp[n];const a=arr.reduce((s,r)=>s+r.q*r.k,0),q=arr.reduce((s,r)=>s+r.q,0);
+    if(REVIEW_PARTIAL.test(n)){const opts=arr.map(r=>({name:r.n,opt:r.o,code:r.c,qty:r.q,cost:r.k,asset:r.q*r.k})).sort((x,y)=>y.qty-x.qty);roptg.push({passet:a,rows:opts});}
+    else{rwhole.push({name:n,opt:'전체 종료',code:'—',qty:q,cost:arr[0].k,asset:a});}
+  });
+  rwhole.sort((a,b)=>b.asset-a.asset);
+  roptg.sort((a,b)=>b.passet-a.passet);
+  const rev=rwhole.concat(...roptg.map(g=>g.rows));
   STORE.review=rev;
   const rel=$('#review-t');
-  if(rel){tbl(rel,[{t:'상품명',k:'name',name:1},{t:'옵션수',k:'opts',r:1},{t:'수량',k:'qty',r:1},{t:'자산(원)',k:'asset',r:1},{t:'등록일',k:'reg'}],rev);
+  if(rel){tbl(rel,[{t:'상품명',k:'name',name:1},{t:'옵션',k:'opt'},{t:'상품코드',k:'code'},{t:'현재고',k:'qty',r:1},{t:'원가',k:'cost',r:1},{t:'자산(원)',k:'asset',r:1}],rev);
     const q=rev.reduce((s,r)=>s+r.qty,0),a=rev.reduce((s,r)=>s+r.asset,0);
-    const tb=rel.querySelector('tbody'); if(tb)tb.insertAdjacentHTML('beforeend',`<tr style="background:#fce4d6;font-weight:700"><td class="name">합계</td><td></td><td class="r">${q.toLocaleString()}</td><td class="r">${a.toLocaleString()}</td><td></td></tr>`);
-    const c=$('#review-cnt'); if(c)c.textContent=`${rev.length}종 · 수량 ${q} · 자산 약 ${Math.round(a/10000).toLocaleString()}만원`;}
+    const tb=rel.querySelector('tbody'); if(tb)tb.insertAdjacentHTML('beforeend',`<tr style="background:#fce4d6;font-weight:700"><td class="name">합계</td><td></td><td></td><td class="r">${q.toLocaleString()}</td><td></td><td class="r">${a.toLocaleString()}</td></tr>`);
+    const c=$('#review-cnt'); if(c)c.textContent=`${rev.length}건 · 수량 ${q} · 자산 약 ${Math.round(a/10000).toLocaleString()}만원`;}
 }
 function dl(key){
   const rows=STORE[key]; if(!rows||!rows.length)return;
