@@ -82,6 +82,7 @@
       <button class="on" data-t="sum">요약</button>
       <button data-t="disc">할인 TOP20</button>
       <button data-t="gift">사은품</button>
+      <button data-t="bait">미끼특가</button>
       <button data-t="scrap">폐기</button>
       <button data-t="review">폐기 검토 대상</button>
       <button data-t="chan">채널별 분배</button>
@@ -95,6 +96,13 @@
         <div style="display:flex;justify-content:space-between;font-size:11px;color:var(--sub);margin-top:5px"><span>6월 −1,500만</span><span>7월 −4,500만</span><span>8월 −7,500만</span><span>9월 −1억</span></div>
         <p class="note">푸시 전 자연소진만으로 6월 마일스톤 절반 돌파 — 앞서가는 중. 적극소진 잔여 <b id="active">—</b>개가 약 3주 뒤 바닥 → 방치 재고 특가 세팅 필요.</p>
       </div>
+    </section>
+
+    <section class="tab" id="bait">
+      <h2>미끼특가 — 사은품 부적합 세트류 (원가 차등 990~4,900)</h2>
+      <div class="toolbar"><span class="cnt" id="bait-cnt"></span><button class="dl" onclick="dl('bait')">⬇ CSV</button></div>
+      <div class="tablewrap"><table id="bait-t"></table></div>
+      <p class="note">사은품으로 주기엔 단가가 높은 세트·브라렛·이벤트웨어를 <b>미끼특가</b>로 소진(나리 책임 피드백). 원가별 차등(원가 5천대 1,900 / 6천대 2,900 / 8천대 4,900). 개당 공헌이익은 적자지만 종료 세트 미끼·트래픽 유입용 — 990 단일 대비 회수매출(B)이 커집니다.</p>
     </section>
 
     <section class="tab" id="disc">
@@ -178,7 +186,7 @@ async function showApp(){
   ]);
   const sm={}; (su.data||[]).forEach(r=>sm[r.k]=r.v);
   STORE={disc:di.data||[],gift:gi.data||[],scrap:sc.data||[]};
-  renderKpi(sm); renderDisc(); renderGift(); renderScrap(); renderChan(); renderFx();
+  renderKpi(sm); renderDisc(); renderGift(); renderBait(); renderScrap(); renderChan(); renderFx();
 }
 const ACTION_FX=[["풀샷브라 볼륨업 백리스",132,123,75,86],["차르르 실크새틴 캐미솔",3,3,4,10],["밀착 심리스 로우라이즈",37,21,19,16],["풀샷 심리스 네모팬티",55,38,35,20],["풀샷몰드 모달 라운드 끈나시",32,1,18,15],["work, love, ballads 코튼팬티",25,17,21,17]];
 function renderFx(){
@@ -253,6 +261,17 @@ function renderGift(){
   const tot=rows.reduce((s,r)=>s+(+r.asset||0),0),totq=rows.reduce((s,r)=>s+(+r.qty||0),0);
   const tb=$('#gift-t').querySelector('tbody'); if(tb)tb.insertAdjacentHTML('beforeend',`<tr style="background:#fce4d6;font-weight:700"><td class="name">합계</td><td class="r">${totq.toLocaleString()}</td><td class="r">${tot.toLocaleString()}만</td><td></td></tr>`);
   $('#gift-cnt').textContent=`${rows.length}건 · 자산 합계 ${tot.toLocaleString()}만원`;
+}
+const BAIT_LIST=[{name:'프리컷 심리스 브라렛 세트(라운드넥)',qty:137,cost:4964,price:1900,recover:26,asset:68},{name:'프리컷 심리스 브라렛 세트(브이넥)',qty:119,cost:5216,price:1900,recover:23,asset:62},{name:'릴렉싱 브라렛 세트',qty:135,cost:5847,price:2900,recover:39,asset:79},{name:'[츠메르] 영혼브라 세트',qty:93,cost:6100,price:2900,recover:27,asset:57},{name:'시크릿 메이드 이벤트웨어',qty:61,cost:6983,price:2900,recover:18,asset:43},{name:'[3종 키트] 리본산타 이벤트웨어',qty:76,cost:8246,price:4900,recover:37,asset:63},{name:'[3종 키트] 벨벳바니 이벤트웨어',qty:187,cost:8498,price:4900,recover:92,asset:159},{name:'[츠메르] 시크릿글램 세트',qty:60,cost:8624,price:4900,recover:29,asset:52},{name:'[4종 키트] 애쉬 벨벳바니 이벤트웨어',qty:53,cost:9003,price:4900,recover:26,asset:48}];
+function renderBait(){
+  const el=$('#bait-t'); if(!el)return;
+  const rows=BAIT_LIST.map(r=>({...r,cm:cmCalc(r.price,r.cost)}));
+  const cmCell=r=>{const v=r.cm||0;return `<td class="r" style="font-weight:600;color:#c0392b">${v.toLocaleString()}</td>`;};
+  tbl(el,[{t:'상품명',k:'name',name:1},{t:'현재고',k:'qty',r:1},{t:'원가',k:'cost',r:1},{t:'미끼특가',k:'price',r:1},{t:'공헌이익/개',html:cmCell},{t:'회수매출(만)',k:'recover',r:1},{t:'자산(만)',k:'asset',r:1}],rows);
+  const tq=rows.reduce((s,r)=>s+r.qty,0),tr=rows.reduce((s,r)=>s+r.recover,0),ta=rows.reduce((s,r)=>s+r.asset,0);
+  const tb=el.querySelector('tbody'); if(tb)tb.insertAdjacentHTML('beforeend',`<tr style="background:#fce4d6;font-weight:700"><td class="name">합계</td><td class="r">${tq.toLocaleString()}</td><td></td><td></td><td></td><td class="r">${tr}만</td><td class="r">${ta}만</td></tr>`);
+  const c=$('#bait-cnt'); if(c)c.textContent=`${rows.length}종 · 재고 ${tq.toLocaleString()}개 · 회수매출 약 ${tr}만 · 자산 ${ta}만`;
+  STORE.bait=rows;
 }
 const ORG_FB=8719; // cafe24 미주문 품목 추정단가
 const ORG={"[2종 키트] 러브픽션 이벤트웨어": 11528, "[2종 키트] 루비우 이벤트웨어": 11528, "[2종 키트] 문라이트 슬립 이벤트웨어": 8751, "[2종 키트] 엔젤링 이벤트웨어": 6731, "[2종 키트] 초커 슬립": 8257, "[3PACK] 베이직 코튼 삼각팬티": 2802, "[3종 구성] 슬리피 펀칭 파자마 세트": 18605, "[3종 키트] 러블리산타 이벤트웨어": 11949, "[3종 키트] 메리산타 이벤트웨어": 9760, "[5PACK] 베이직 코튼 삼각팬티": 3786, "[5종 키트] 산타바니 이벤트웨어": 16771, "[노브라웨어] 몸매보정 하이업 브라탑 단품": 3843, "[노브라웨어] 솔리드 백리스 크롭 캡나시": 4115, "[노브라웨어] 솔티 크롭 캡나시": 3954, "[노브라웨어] 하트넥 튜브탑 캡나시": 4187, "[묶음팬티] 플라비 팬티 (3P)": 6226, "[뱃살보정] 파워슬림 매쉬 집업 똥배팬티": 7000, "[보정나시] 글램바디 아쿠아 끈나시": 16500, "[빅사이즈] 뉴데이 세트": 10236, "[빅사이즈] 더블커버 브라렛 단품": 9508, "[빅사이즈] 레이븐 홑겹 세트": 11380, "[빅사이즈] 루비아 홑겹 세트": 10834, "[빅사이즈] 밀착 심리스 브라렛 단품": 9385, "[빅사이즈] 벅썸 커버 브라렛 단품": 10463, "[빅사이즈] 엘로니아 세트": 10479, "[빅사이즈] 엠보 심리스 브라렛 단품": 9979, "[빅사이즈] 올데이 심리스 브라렛 단품": 7882, "[스트랩] 믹싱 브라렛 세트": 9466, "[츠메르] 데일리볼륨 세트": 9626, "[츠메르] 마이볼륨 세트": 4038, "[츠메르] 뮤즈글램 세트": 7981, "[츠메르] 앨린 심리스 볼륨브라 세트": 7615, "[츠메르] 컬러볼륨 세트": 6136, "[풀샷몰드] 모달 라운드 크롭 캡나시": 16553, "[풀샷몰드] 베이직 워머 캡내장 폴라티": 10423, "[풀샷몰드] 부유방커버 베이직 캡나시": 16183, "[피치백] 더블업 힙업팬티": 8637, "[필러브라] 더블업 볼륨브라 세트": 7615, "[필러브라] 디얼마이 세트": 9519, "[필러브라] 베이글 볼륨 세트": 9232, "[필러브라] 볼륨 앞후크 세트": 9932, "[필러브라] 볼륨베이스 세트": 6875, "[필러브라] 볼륨셔링 세트": 6857, "[필러브라] 소프트볼륨 세트": 10534, "[필러브라] 스위티 왕뽕브라 세트": 7746, "[필러브라] 여신브라 브라 단품": 5668, "[필러브라] 캔디팝 앞후크 브라 단품": 3134, "[필러브라] 퍼펙트커버 앞후크 세트": 10808, "꽃레이스 니플패치": 3217, "누디웨이브 밀착 브라 세트": 7615, "데이데이 브라렛 단품": 5332, "데이심플 팬티": 6422, "데인하이웨이스트 팬티": 5109, "라인핏 부츠컷 레깅스": 13379, "로맨틱 벨벳 파자마 (2P)": 15100, "로에 브라렛 세트": 9625, "루피앙 티팬티": 3191, "리본스트랩 티팬티": 924, "마멜 트임 슬립 (2P)": 5710, "메이트 수면잠옷 (2P)": 14052, "밀착 브이 팬티": 4850, "밀착무봉제 팬티": 5058, "바나프 브라렛 단품": 3843, "발렌 노와이어 세트": 8687, "백리스 바프 브라렛 세트": 3323, "베이직 반컵브라 세트": 10110, "베이직 앞후크 브라 세트": 10217, "볼륨바이블 팬티": 3604, "사이드딥 레이스 팬티": 3420, "사이드홀 스타킹": 4711, "시에나 브라렛 세트": 3182, "시크릿 누디라인 속바지": 4149, "실키 레이스 원피스 파자마": 12285, "안나스트랩 세트": 11183, "앞여밈 캐미솔 (2P)": 7544, "엔젤로나 슬립 (2P)": 7748, "여리끈 레이스 팬티": 3389, "조이레이스 반컵브라 세트": 10240, "체크무드 기모 파자마 (2P)": 12033, "카미르 올인원": 12227, "코코블링 트위스트 수면잠옷 (2P)": 17703, "콜링레이스 팬티": 1073, "키스미 슬립 (2P)": 12635, "테디 곰돌이 파자마 (2P)": 11528, "파티퀸산타 이벤트웨어": 14015, "팔레트 캐미솔 (2P)": 8312, "퓨어레이시 나시 파자마 (2P)": 15314, "프릴리본 레이스 나시 파자마 (2P)": 13787, "플라워데이 원피스 파자마": 10770, "헬레나 세트": 10265};
