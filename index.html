@@ -99,10 +99,10 @@
     </section>
 
     <section class="tab" id="bait">
-      <h2>특가 — 사은품 부적합 세트·팬티류 (제품 단위 · 원가 차등 1,900~4,900)</h2>
+      <h2>특가 — 사은품 부적합 세트·이벤트웨어 키트류 (제품 단위 · 원가 차등 1,900~4,900)</h2>
       <div class="toolbar"><span class="cnt" id="bait-cnt"></span><button class="dl" onclick="dl('bait')">⬇ CSV</button></div>
       <div class="tablewrap"><table id="bait-t"></table></div>
-      <p class="note">진행종료(제품 단위 종료)된 세트·브라렛·이벤트웨어 + 사이즈 다수 팬티류를 <b>특가</b>로 소진(나리 책임 피드백). <b>제품 단위 집계</b>(옵션수·총재고). 원가별 차등(원가 5천대 1,900 / 6천대 2,900 / 7천대+ 4,900). 개당 공헌이익은 적자지만 종료 제품 트래픽 유입용. 옵션별 상세는 CSV·폐기 탭 참고.</p>
+      <p class="note">진행종료(제품 단위 종료)된 세트·브라렛·이벤트웨어 키트류를 <b>특가</b>로 소진(나리 책임 피드백). <b>제품 단위 집계</b>(옵션수·총재고). 원가별 차등(원가 5천대 1,900 / 6천대 2,900 / 7천대+ 4,900). 개당 공헌이익은 적자지만 종료 제품 트래픽 유입용. 옵션별 상세는 CSV 참고.</p>
     </section>
 
     <section class="tab" id="disc">
@@ -117,12 +117,12 @@
       <h2>사은품 후보 — 적합·보통 품목 (고단가 5종은 할인 전환·제외)</h2>
       <div class="toolbar"><span class="cnt" id="gift-cnt"></span><button class="dl" onclick="dl('gift')">⬇ CSV</button></div>
       <div class="tablewrap"><table id="gift-t"></table></div>
-      <p class="note">사은품 = 저가 단품·부자재 위주, <b>사이즈 선택 부담 없는 것</b>(연장후크·패드·스타킹·티팬티·타투스티커·캔디팝 등). <b>① 세트·브라렛·이벤트웨어 키트류</b>(프리컷 브라렛 세트·릴렉싱·영혼브라·시크릿글램·리본산타/벨벳바니/애쉬벨벳바니/시크릿메이드)와 <b>② 사이즈 다수 팬티류</b>(프리컷 심리스 팬티·베일에가려진 팬티·개미허리 비키니팬티·CH 팬티)는 사은품 부적합 → <b>특가로 전환</b>.</p>
+      <p class="note">사은품 = 저가 단품·팬티·부자재 위주(연장후크·패드·스타킹·티팬티·타투스티커·캔디팝·베일/CH/개미허리/프리컷 심리스 팬티 등). <b>세트·브라렛·이벤트웨어 키트류는 사은품 부적합 → 특가로 전환(별도)</b>: 프리컷 브라렛 세트(라운드넥·브이넥)·릴렉싱 브라렛 세트·[츠메르]영혼브라 세트·시크릿글램 세트·리본산타/벨벳바니/애쉬벨벳바니/시크릿메이드 이벤트웨어.</p>
     </section>
 
     <section class="tab" id="scrap">
-      <h2>폐기 — 즉시폐기 옵션(SKU) · 판매0·재고≤5 꼬다리</h2>
-      <p class="note" style="margin-bottom:10px">월말 일괄 상신 대상. 옵션(SKU) 단위 · 상품코드·옵션명 포함. 자산 = 이지어드민 원가 × 현재고.</p>
+      <h2>폐기 — 즉시폐기 · 판매0·재고≤5 꼬다리</h2>
+      <p class="note" style="margin-bottom:10px">월말 일괄 상신 대상. <b>상품 전체 종료 = 상품 단위</b>(옵션='전체 종료'), <b>일부 옵션만 종료 = 옵션 단위</b>(베이직 코튼 삼각팬티·프리컷 브라렛 세트). 자산 = 이지어드민 원가 × 현재고.</p>
       <div class="toolbar"><span class="cnt" id="scrap-cnt"></span><button class="dl" onclick="dl('scrap')">⬇ CSV</button></div>
       <div class="tablewrap"><table id="scrap-t"></table></div>
     </section>
@@ -255,8 +255,7 @@ function renderGift(){
   const GIFT_ADD=[{code:'01124',name:'연장후크 3단',qty:8507,unit:81,asset:69,fit:'적합(초저가)'},{code:'05117',name:'투컵업 추가패드',qty:2422,unit:823,asset:199,fit:'적합(저가)'},{code:'S베일',name:'베일에가려진 팬티',qty:462,unit:1934,asset:89,fit:'적합(저가 대량)'},{code:'S캔디',name:'캔디팝 팬티',qty:246,unit:1556,asset:38,fit:'적합(초저가 대량)'},{code:'S프리R',name:'프리컷 심리스 브라렛 세트(라운드넥)',qty:137,unit:4964,asset:68,fit:'보통'},{code:'S릴렉싱',name:'릴렉싱 브라렛 세트',qty:138,unit:5847,asset:81,fit:'보통(세트·단가↑)'},{code:'S프리',name:'프리컷 심리스 브라렛 세트(브이넥)',qty:118,unit:5216,asset:62,fit:'보통(세트·단가↑)'},{code:'SCH',name:'CH 팬티',qty:10,unit:1934,asset:2,fit:'적합(초저가)'},{code:'S데미안',name:'데미안 소망 스타킹',qty:370,unit:1429,asset:53,fit:'적합(저가)'},{code:'S개미',name:'개미허리 비키니팬티 (1P)',qty:221,unit:4964,asset:110,fit:'보통(단가↑)'},{code:'S쫀쫀',name:'사은품 쫀쫀 심리스 팬티',qty:9,unit:0,asset:0,fit:'적합(사은품 전용)'}];
   const ADDN=GIFT_ADD.map(x=>x.name);
   const BAIT=/세트|브라렛|이벤트웨어|글램/;
-  const MOVED=/프리컷 심리스 팬티|개미허리 비키니팬티|베일에가려진 팬티|CH 팬티/;
-  const rows=STORE.gift.filter(r=>!String(r.fit||'').includes('고단가')&&!String(r.name||'').includes('밀착 노와이어')&&!ADDN.includes(String(r.name||''))).concat(GIFT_ADD).filter(r=>!BAIT.test(String(r.name||''))&&!MOVED.test(String(r.name||''))).sort((a,b)=>{const o=f=>String(f||'').startsWith('적합')?0:(String(f||'').startsWith('보통')?1:2);return o(a.fit)-o(b.fit)||(+b.asset||0)-(+a.asset||0);});
+  const rows=STORE.gift.filter(r=>!String(r.fit||'').includes('고단가')&&!String(r.name||'').includes('밀착 노와이어')&&!ADDN.includes(String(r.name||''))).concat(GIFT_ADD).filter(r=>!BAIT.test(String(r.name||''))).sort((a,b)=>{const o=f=>String(f||'').startsWith('적합')?0:(String(f||'').startsWith('보통')?1:2);return o(a.fit)-o(b.fit)||(+b.asset||0)-(+a.asset||0);});
   const fitCell=r=>{const f=String(r.fit||'');const c=f.startsWith('적합')?'background:#e3f6e9;color:#1f7a3d':(f.startsWith('보통')?'background:#fff3d6;color:#a36a00':'background:#ffe8e6;color:#c0392b');return `<td><span class="chip" style="${c}">${f}</span></td>`;};
   tbl($('#gift-t'),[{t:'상품명',k:'name',name:1},{t:'수량',k:'qty',r:1},{t:'자산(만원)',k:'asset',r:1},{t:'적합도',html:fitCell}],rows);
   const tot=rows.reduce((s,r)=>s+(+r.asset||0),0),totq=rows.reduce((s,r)=>s+(+r.qty||0),0);
@@ -395,7 +394,6 @@ function renderBait(){
   // 제품(상품명) 단위 집계 — 진행종료는 제품 단위 종료
   const agg={};
   BAIT_SKU.forEach(r=>{if(!agg[r.n])agg[r.n]={name:r.n,qty:0,cost:r.k,opts:0};agg[r.n].qty+=r.q;agg[r.n].opts++;});
-  BAIT_ADD.forEach(r=>{const oc=parseInt((String(r.o).match(/(\d+)\s*옵션/)||[])[1]||1);agg[r.n]={name:r.n,qty:r.q,cost:r.k,opts:oc};});
   let rows=Object.values(agg).map(r=>{const price=baitPrice(r.cost);return {...r,price,cm:cmCalc(price,r.cost),recover:Math.round(r.qty*price/10000),asset:Math.round(r.qty*r.cost/10000)};}).sort((a,b)=>b.asset-a.asset);
   const cmCell=r=>`<td class="r" style="font-weight:600;color:#c0392b">${(r.cm||0).toLocaleString()}</td>`;
   tbl(el,[{t:'상품명',k:'name',name:1},{t:'옵션수',k:'opts',r:1},{t:'현재고',k:'qty',r:1},{t:'원가',k:'cost',r:1},{t:'특가',k:'price',r:1},{t:'공헌이익/개',html:cmCell},{t:'회수매출(만)',k:'recover',r:1},{t:'자산(만)',k:'asset',r:1}],rows);
@@ -447,24 +445,31 @@ const SCRAP_SKU=[
 {n:"랜덤_ 브라+팬티 세트",o:"[95 SIZE]",c:"S99754",q:2,k:0}
 ];
 function renderScrap(){
-  // 폐기: 즉시폐기 옵션(SKU) 단위 — 판매0·재고≤5 꼬다리
-  const srows=SCRAP_SKU.map(r=>({name:r.n,opt:r.o,code:r.c,qty:r.q,cost:r.k,asset:r.q*r.k})).sort((a,b)=>b.asset-a.asset);
+  // 폐기: 상품 전체 종료 → 상품단위 / 일부 옵션만 종료(베이직 코튼 삼각팬티·프리컷 브라렛 세트) → 옵션단위
+  const KEEP_OPT=/베이직 코튼 삼각팬티|프리컷 심리스 브라렛 세트/;
+  const grp={}; SCRAP_SKU.forEach(r=>{(grp[r.n]=grp[r.n]||[]).push(r);});
+  let srows=[];
+  Object.keys(grp).forEach(n=>{const arr=grp[n];
+    if(KEEP_OPT.test(n)){arr.forEach(r=>srows.push({name:r.n,opt:r.o,code:r.c,qty:r.q,cost:r.k,asset:r.q*r.k}));}
+    else{const q=arr.reduce((s,r)=>s+r.q,0),a=arr.reduce((s,r)=>s+r.q*r.k,0);srows.push({name:n,opt:arr.length>1?`전체 종료 (${arr.length}옵션)`:'전체 종료',code:'—',qty:q,cost:arr[0].k,asset:a});}
+  });
+  srows.sort((a,b)=>b.asset-a.asset);
   STORE.scrap=srows;
   const sel=$('#scrap-t');
   if(sel){tbl(sel,[{t:'상품명',k:'name',name:1},{t:'옵션',k:'opt'},{t:'상품코드',k:'code'},{t:'현재고',k:'qty',r:1},{t:'원가',k:'cost',r:1},{t:'자산(원)',k:'asset',r:1}],srows);
     const sq=srows.reduce((s,r)=>s+r.qty,0),sa=srows.reduce((s,r)=>s+r.asset,0);
-    const stb=sel.querySelector('tbody'); if(stb)stb.insertAdjacentHTML('beforeend',`<tr style="background:#fce4d6;font-weight:700"><td class="name">합계 (${srows.length} SKU)</td><td></td><td></td><td class="r">${sq.toLocaleString()}</td><td></td><td class="r">${sa.toLocaleString()}</td></tr>`);
-    const sc=$('#scrap-cnt'); if(sc)sc.textContent=`${srows.length} SKU · 수량 ${sq} · 자산 약 ${Math.round(sa/10000).toLocaleString()}만원`;}
-  // 특가 검토: 2023.7+ 등록 신상 (제품/옵션 혼합)
-  const compute=r=>({gubun:r[0],name:r[1],qty:r[2],reg:r[3],asset:r[2]*(ORG[r[1]]||ORG_FB)});
-  const rev=SCRAP.filter(r=>r[4]==='재검토').map(compute);
+    const stb=sel.querySelector('tbody'); if(stb)stb.insertAdjacentHTML('beforeend',`<tr style="background:#fce4d6;font-weight:700"><td class="name">합계</td><td></td><td></td><td class="r">${sq.toLocaleString()}</td><td></td><td class="r">${sa.toLocaleString()}</td></tr>`);
+    const sc=$('#scrap-cnt'); if(sc)sc.textContent=`${srows.length}건 · 수량 ${sq} · 자산 약 ${Math.round(sa/10000).toLocaleString()}만원`;}
+  // 특가 검토: 2023.7+ 등록 신상 — 제품(상품명) 단위 집계
+  const ragg={};
+  SCRAP.filter(r=>r[4]==='재검토').forEach(r=>{const n=r[1];if(!ragg[n])ragg[n]={name:n,opts:0,qty:0,reg:r[3]};ragg[n].opts++;ragg[n].qty+=r[2];});
+  const rev=Object.values(ragg).map(r=>({...r,asset:r.qty*(ORG[r.name]||ORG_FB)})).sort((a,b)=>b.asset-a.asset);
   STORE.review=rev;
-  const gub=r=>r.gubun==='제품'?'<td><span class="chip c-etc">제품</span></td>':'<td><span class="chip c-self">옵션</span></td>';
   const rel=$('#review-t');
-  if(rel){tbl(rel,[{t:'구분',html:gub},{t:'상품명',k:'name',name:1},{t:'수량',k:'qty',r:1},{t:'자산(원)',k:'asset',r:1},{t:'등록일',k:'reg'}],rev);
+  if(rel){tbl(rel,[{t:'상품명',k:'name',name:1},{t:'옵션수',k:'opts',r:1},{t:'수량',k:'qty',r:1},{t:'자산(원)',k:'asset',r:1},{t:'등록일',k:'reg'}],rev);
     const q=rev.reduce((s,r)=>s+r.qty,0),a=rev.reduce((s,r)=>s+r.asset,0);
-    const tb=rel.querySelector('tbody'); if(tb)tb.insertAdjacentHTML('beforeend',`<tr style="background:#fce4d6;font-weight:700"><td></td><td class="name">합계</td><td class="r">${q.toLocaleString()}</td><td class="r">${a.toLocaleString()}</td><td></td></tr>`);
-    const c=$('#review-cnt'); if(c)c.textContent=`${rev.length}건 · 수량 ${q} · 자산 약 ${Math.round(a/10000).toLocaleString()}만원`;}
+    const tb=rel.querySelector('tbody'); if(tb)tb.insertAdjacentHTML('beforeend',`<tr style="background:#fce4d6;font-weight:700"><td class="name">합계</td><td></td><td class="r">${q.toLocaleString()}</td><td class="r">${a.toLocaleString()}</td><td></td></tr>`);
+    const c=$('#review-cnt'); if(c)c.textContent=`${rev.length}종 · 수량 ${q} · 자산 약 ${Math.round(a/10000).toLocaleString()}만원`;}
 }
 function dl(key){
   const rows=STORE[key]; if(!rows||!rows.length)return;
