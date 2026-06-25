@@ -508,7 +508,7 @@ const REVIEW_SKU=[
 {n:"영혼브라 퓨징 삼각팬티",o:"(전체 종료)",c:"대표",q:1,k:1682},
 {n:"쫀득퓨징 삼각팬티",o:"(전체 종료)",c:"대표",q:2,k:1808}
 ];
-const REVIEW_PARTIAL=/\[3PACK\] 베이직 코튼 삼각팬티|\[5PACK\] 베이직 코튼 삼각팬티|라인핏 부츠컷 레깅스|슬리피 펀칭 파자마|저중심 솔리드 노와이어|딥브이 커버 니트 모노키니 \(Short\)/;
+const REVIEW_PARTIAL=/\[3PACK\] 베이직 코튼 삼각팬티|\[5PACK\] 베이직 코튼 삼각팬티|라인핏 부츠컷 레깅스|저중심 솔리드 노와이어|딥브이 커버 니트 모노키니 \(Short\)/;
 function renderScrap(){
   // 폐기: 상품 전체 종료 → 상품단위 / 일부 옵션만 종료(베이직 코튼 삼각팬티·프리컷 브라렛 세트) → 옵션단위
   // 일부 옵션만 종료(활성 구성과 혼재)인 상품 = 옵션 단위 유지. 그 외 = 상품 전체 종료
@@ -541,16 +541,14 @@ function renderReview(){
   const rgrp={}; REVIEW_SKU.forEach(r=>{(rgrp[r.n]=rgrp[r.n]||[]).push(r);});
   let rev=[];
   if(REVIEW_MODE==='product'){
-    rev=Object.keys(rgrp).map(n=>{const arr=rgrp[n];const a=arr.reduce((s,r)=>s+r.q*r.k,0),q=arr.reduce((s,r)=>s+r.q,0);const whole=!REVIEW_PARTIAL.test(n);return {name:n,opt:whole?'전체 종료':`일부 종료 (${arr.length}옵션)`,code:'—',qty:q,cost:arr[0].k,asset:a};}).sort((a,b)=>b.asset-a.asset);
+    // 상품별 = 상품 전체 종료된 제품만
+    rev=Object.keys(rgrp).filter(n=>!REVIEW_PARTIAL.test(n)).map(n=>{const arr=rgrp[n];const a=arr.reduce((s,r)=>s+r.q*r.k,0),q=arr.reduce((s,r)=>s+r.q,0);return {name:n,opt:'전체 종료',code:'—',qty:q,cost:arr[0].k,asset:a};}).sort((a,b)=>b.asset-a.asset);
   } else {
-    let rwhole=[], roptg=[];
-    Object.keys(rgrp).forEach(n=>{const arr=rgrp[n];const a=arr.reduce((s,r)=>s+r.q*r.k,0),q=arr.reduce((s,r)=>s+r.q,0);
-      if(REVIEW_PARTIAL.test(n)){const opts=arr.map(r=>({name:r.n,opt:r.o,code:r.c,qty:r.q,cost:r.k,asset:r.q*r.k})).sort((x,y)=>y.qty-x.qty);roptg.push({passet:a,rows:opts});}
-      else{rwhole.push({name:n,opt:'전체 종료',code:'—',qty:q,cost:arr[0].k,asset:a});}
-    });
-    rwhole.sort((a,b)=>b.asset-a.asset);
+    // 옵션별 = 활성 상품의 종료 옵션만 (옵션 단위 검토 대상)
+    let roptg=[];
+    Object.keys(rgrp).filter(n=>REVIEW_PARTIAL.test(n)).forEach(n=>{const arr=rgrp[n];const a=arr.reduce((s,r)=>s+r.q*r.k,0);const opts=arr.map(r=>({name:r.n,opt:r.o,code:r.c,qty:r.q,cost:r.k,asset:r.q*r.k})).sort((x,y)=>y.qty-x.qty);roptg.push({passet:a,rows:opts});});
     roptg.sort((a,b)=>b.passet-a.passet);
-    rev=rwhole.concat(...roptg.map(g=>g.rows));
+    rev=[].concat(...roptg.map(g=>g.rows));
   }
   STORE.review=rev;
   tbl(rel,[{t:'상품명',k:'name',name:1},{t:'옵션',k:'opt'},{t:'상품코드',k:'code'},{t:'현재고',k:'qty',r:1},{t:'원가',k:'cost',r:1},{t:'자산(원)',k:'asset',r:1}],rev);
