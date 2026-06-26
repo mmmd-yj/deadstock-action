@@ -121,8 +121,8 @@
     </section>
 
     <section class="tab" id="scrap">
-      <h2>폐기 — 즉시폐기 · 판매0·재고≤5 꼬다리</h2>
-      <p class="note" style="margin-bottom:10px">월말 일괄 상신 대상. <b>상품 전체 종료 = 상품 단위</b>(옵션='전체 종료')로 상단에, <b>일부 옵션만 종료(활성 구성과 혼재)</b>는 상품별로 묶어 옵션 단위로 하단에 표시 — 현재 베이직 코튼 삼각팬티([3PACK]·[5PACK])만 해당. 자산 = 이지어드민 원가 × 현재고.</p>
+      <h2>폐기 — 즉시폐기 · 판매0·재고 4개 이하 꼬다리</h2>
+      <p class="note" style="margin-bottom:10px">월말 일괄 상신 대상. <b>재고 5개 이상은 제외</b>(소진 여지 있어 특가로) — 판매0·재고 4개 이하만. <b>상품 전체 종료 = 상품 단위</b>(옵션='전체 종료') 상단에, <b>일부 옵션만 종료(활성 구성과 혼재)</b>는 상품별로 묶어 옵션 단위로 하단에. 자산 = 이지어드민 원가 × 현재고.</p>
       <div class="toolbar"><span class="cnt" id="scrap-cnt"></span><button class="dl" onclick="dl('scrap')">⬇ CSV</button></div>
       <div class="tablewrap"><table id="scrap-t"></table></div>
     </section>
@@ -567,7 +567,7 @@ function renderScrap(){
   // 폐기: 상품 전체 종료 → 상품단위 / 일부 옵션만 종료(베이직 코튼 삼각팬티·프리컷 브라렛 세트) → 옵션단위
   // 일부 옵션만 종료(활성 구성과 혼재)인 상품 = 옵션 단위 유지. 그 외 = 상품 전체 종료
   const KEEP_OPT=/베이직 코튼 삼각팬티/;
-  const grp={}; SCRAP_SKU.forEach(r=>{(grp[r.n]=grp[r.n]||[]).push(r);});
+  const grp={}; SCRAP_SKU.filter(r=>r.q<5).forEach(r=>{(grp[r.n]=grp[r.n]||[]).push(r);});
   let whole=[], optg=[];
   Object.keys(grp).forEach(n=>{const arr=grp[n];const a=arr.reduce((s,r)=>s+r.q*r.k,0),q=arr.reduce((s,r)=>s+r.q,0);
     if(KEEP_OPT.test(n)){const opts=arr.map(r=>({name:r.n,opt:r.o,code:r.c,qty:r.q,cost:r.k,asset:r.q*r.k})).sort((x,y)=>y.qty-x.qty);optg.push({passet:a,rows:opts});}
