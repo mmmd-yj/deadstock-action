@@ -99,10 +99,10 @@
     </section>
 
     <section class="tab" id="bait">
-      <h2>특가 — 진행종료 전체종료 제품 (레이더 기준 · 사은품 부적합 · 자산순 상위 50)</h2>
+      <h2>특가 — 진행종료 전체종료 · 사은품 부적합 · 등록 오래된 제품 (2022년 이전 첫판매)</h2>
       <div class="toolbar"><span class="cnt" id="bait-cnt"></span><button class="dl" onclick="dl('bait')">⬇ CSV</button></div>
       <div class="tablewrap"><table id="bait-t"></table></div>
-      <p class="note">재고 리스크 레이더 진행종료(6/24) 중 <b>상품 전체 종료 · 사은품 부적합</b> 295건의 <b>자산순 상위 50</b>. <b>전체 295건 리스트는 별도 파일</b>(레이더_진행종료_분류 CSV) 참고 → 윤정님 판단 후 확정. ⚠️특가는 원가별 차등(5천대 1,900/6천대 2,900/7천대+ 4,900) <b>자동 초안</b> — 고원가 제품은 역마진이라 <b>매력가는 사람이 직접 확정</b>(나리 책임 피드백).</p>
+      <p class="note">레이더 진행종료 전체종료(사은품 부적합) 중 <b>등록 오래된 제품</b>(첫 판매 2020~2022) — 죽은 지 오래라 적극 특가 소진. 최근(2023.7+) 종료 제품은 <b>특가 검토</b> 탭으로. (현재 자산순 상위 50 분석분 중 오래된 20종 · 전체 295건은 분류 CSV 참고). ⚠️특가는 원가 차등 자동 초안 — 고원가는 역마진이라 <b>매력가는 사람이 확정</b>(나리 책임 피드백).</p>
     </section>
 
     <section class="tab" id="disc">
@@ -438,8 +438,9 @@ const BAIT_TOP50=[
 function baitPrice(k){return k<5500?1900:(k<7000?2900:4900);}
 function renderBait(){
   const el=$('#bait-t'); if(!el)return;
-  // 레이더 진행종료 전체종료(사은품 부적합) 자산순 상위 50 · 제품 단위
-  let rows=BAIT_TOP50.map(r=>{const price=baitPrice(r.k);return {name:r.n,opt:'전체 종료',qty:r.q,cost:r.k,price,cm:cmCalc(price,r.k),recover:Math.round(r.q*price/10000),asset:Math.round(r.q*r.k/10000)};}).sort((a,b)=>b.asset-a.asset);
+  // 특가 = 전체종료 사은품부적합 중 등록 오래된(2022년 이전 첫판매) 제품. 최근(2023.7+)은 특가 검토로.
+  const OLD=new Set(["모브닝 브라렛 단품","올시스루 홑겹 세트","[빅사이즈] 베로니카 세트","[츠메르] 볼륨메이커 브라 단품","[빅사이즈] 쫀쫀 퓨징 브라렛 단품","[심리스] 홀가먼트 네모팬티","[3종 키트] 벨벳바니 이벤트웨어","[필러브라] 올리비아 세트","릴렉싱 브라렛 세트","[3종 키트] 스트랩바니 이벤트웨어","밀착 노와이어 브라 단품","[코르셋] 심플햄라인 브라 단품","[5종 키트] 디어 메이드 이벤트웨어","[빅사이즈] 캐서린 홑겹 세트","미쉘 레이스 올인원 슬립","[심리스] 울트라슬림 24g 네모팬티","주피터 올인원 슬립","[3종 키트] 리본산타 이벤트웨어","화이트크리스마스 이벤트웨어","[노와이어] 데일리무드 코튼 브라 단품"]);
+  let rows=BAIT_TOP50.filter(r=>OLD.has(r.n)).map(r=>{const price=baitPrice(r.k);return {name:r.n,opt:'전체 종료',qty:r.q,cost:r.k,price,cm:cmCalc(price,r.k),recover:Math.round(r.q*price/10000),asset:Math.round(r.q*r.k/10000)};}).sort((a,b)=>b.asset-a.asset);
   const cmCell=r=>`<td class="r" style="font-weight:600;color:#c0392b">${(r.cm||0).toLocaleString()}</td>`;
   tbl(el,[{t:'상품명',k:'name',name:1},{t:'옵션',k:'opt'},{t:'현재고',k:'qty',r:1},{t:'원가',k:'cost',r:1},{t:'특가',k:'price',r:1},{t:'공헌이익/개',html:cmCell},{t:'회수매출(만)',k:'recover',r:1},{t:'자산(만)',k:'asset',r:1}],rows);
   const tq=rows.reduce((s,r)=>s+r.qty,0),ta=rows.reduce((s,r)=>s+r.asset,0),tr=rows.reduce((s,r)=>s+r.recover,0);
