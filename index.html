@@ -567,7 +567,9 @@ function renderScrap(){
   // 폐기: 상품 전체 종료 → 상품단위 / 일부 옵션만 종료(베이직 코튼 삼각팬티·프리컷 브라렛 세트) → 옵션단위
   // 일부 옵션만 종료(활성 구성과 혼재)인 상품 = 옵션 단위 유지. 그 외 = 상품 전체 종료
   const KEEP_OPT=/베이직 코튼 삼각팬티/;
-  const grp={}; SCRAP_SKU.filter(r=>r.q<=5).forEach(r=>{(grp[r.n]=grp[r.n]||[]).push(r);});
+  // 다른 사이즈에 재고 넉넉한 전체종료 제품 = 즉시폐기 아님(특가 소진 대상) → 제외
+  const PYEGI_EXCL=new Set(["[피치백] 에어홀패드 힙업팬티","심플플랫 쪼리","딜리셔스 비키니(2P)","프리컷 심리스 브라렛 세트(브이넥)","랜덤_ 브라+팬티 세트","랜덤_ 브라 단품"]);
+  const grp={}; SCRAP_SKU.filter(r=>r.q<=5 && !PYEGI_EXCL.has(r.n)).forEach(r=>{(grp[r.n]=grp[r.n]||[]).push(r);});
   let whole=[], optg=[];
   Object.keys(grp).forEach(n=>{const arr=grp[n];const a=arr.reduce((s,r)=>s+r.q*r.k,0),q=arr.reduce((s,r)=>s+r.q,0);
     if(KEEP_OPT.test(n)){const opts=arr.map(r=>({name:r.n,opt:r.o,code:r.c,qty:r.q,cost:r.k,asset:r.q*r.k})).sort((x,y)=>y.qty-x.qty);optg.push({passet:a,rows:opts});}
